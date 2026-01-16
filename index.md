@@ -10,10 +10,15 @@ My interests are broad including public finance, geoeconomics, economic history,
 
 ## 📚 Books & Working Papers
 
-### 🇺🇸 [The American Economy (Living Textbook)](https://laurence-wilse-samson.gitbook.io/textbooks/the-american-economy/)
+### 🛡️ [Economic Coercion](https://laurence-wilse-samson.gitbook.io/textbooks/economic-coercion)
+A comprehensive guide to sanctions, trade wars, and economic statecraft.
+* **Format:** [Read Online (GitBook)](https://laurence-wilse-samson.gitbook.io/textbooks/economic-coercion) | [Source Code](https://github.com/laurencehw/economic-coercion)
+* **Status:** Living Draft
+
+### 🇺🇸 [The American Economy](https://laurence-wilse-samson.gitbook.io/textbooks/the-american-economy)
 A living open-source textbook on structural transformation and labor markets.
-* **Format:** [Read Online (GitBook)](https://laurence-wilse-samson.gitbook.io/textbooks/the-american-economy/) | [Source Code](https://github.com/laurencehw/the-american-economy)
-* **Status:** Living Draft (Updated Weekly)
+* **Format:** [Read Online (GitBook)](https://laurence-wilse-samson.gitbook.io/textbooks/the-american-economy) | [Source Code](https://github.com/laurencehw/the-american-economy)
+* **Status:** Living Draft
 
 ### 📉 [Natural Rate of Interest Estimation](https://github.com/laurencehw/natural-rate/releases/latest)
 *Working Paper, January 2026*
