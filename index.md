@@ -16,7 +16,7 @@ A comprehensive guide to sanctions, trade wars, and economic statecraft.
 * **Status:** Living Draft
 
 ### 🇺🇸 [The American Economy](https://laurence-wilse-samson.gitbook.io/textbooks/the-american-economy)
-A living open-source textbook on structural transformation and labor markets.
+A living open-source textbook on the structure and institutions of the american economy.
 * **Format:** [Read Online (GitBook)](https://laurence-wilse-samson.gitbook.io/textbooks/the-american-economy) | [Source Code](https://github.com/laurencehw/the-american-economy)
 * **Status:** Living Draft
 
