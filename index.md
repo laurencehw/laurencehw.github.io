@@ -1,0 +1,43 @@
+# Laurence Wilse-Samson
+
+I am an economist and researcher based in New York City, working as a consultant and serving as adjunct faculty at Columbia University and NYU. 
+
+My interests are broad including public finance, geoeconomics, economic history, and policy.
+
+[**LinkedIn**](https://www.linkedin.com/in/laurence-w-764b562) 
+
+---
+
+## 🏛️ Recent Projects
+
+### [🇿🇦 South African Economic Reform Agenda](https://github.com/laurencehw/brrr_recs)
+A 10-year longitudinal analysis of parliamentary oversight reports.
+* **Tools:** Python, PyMuPDF, NLP
+* **Outcome:** Analyzed 5,256 specific policy recommendations to identify "Quick Wins" for the national budget.
+* [View Code](https://github.com/laurencehw/brrr_recs)
+
+### [📈 Fiscal Policy Calculator](https://github.com/laurencehw/fiscal-policy-calculator)
+Interactive tool for modeling fiscal impacts of tax and spending.
+* **Tools:** Python, Pandas
+* **Status:** Active Development, lots of work needed
+* [View Code](https://github.com/laurencehw/fiscal-policy-calculator)
+
+---
+
+## 🔬 Research Interests
+
+* **Public Finance:** Budgetary allocation efficiency and oversight.
+* **Geoeconomics:** The impact of spatial factors on economic development.
+* **Digital History:** Digitizing historical South African economic and electoral data.
+
+---
+
+## 🛠️ Technical Stack
+
+| Domain | Tools |
+| :--- | :--- |
+| **Data Analysis** | Python (Pandas, NumPy), R |
+| **Geospatial** | QGIS, GeoPandas |
+| **Visualization** | Matplotlib, Seaborn |
+
+<small>Hosted on GitHub Pages &mdash; [View Source](https://github.com/laurencehw/laurencehw.github.io)</small>
