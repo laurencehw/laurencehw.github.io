@@ -8,6 +8,21 @@ My interests are broad including public finance, geoeconomics, economic history,
 
 ---
 
+## 📚 Books & Working Papers
+
+### 🇺🇸 [The American Economy (Living Textbook)](https://laurence-wilse-samson.gitbook.io/textbooks/the-american-economy/)
+A living open-source textbook on structural transformation and labor markets.
+* **Format:** [Read Online (GitBook)](https://laurence-wilse-samson.gitbook.io/textbooks/the-american-economy/) | [Source Code](https://github.com/laurencehw/the-american-economy)
+* **Status:** Living Draft (Updated Weekly)
+
+### 📉 [Natural Rate of Interest Estimation](https://github.com/laurencehw/natural-rate/releases/latest)
+*Working Paper, January 2026*
+* **Abstract:** Implementation of the HLW model using post-pandemic data to estimate r-star.
+* **Download:** [📄 PDF Draft](https://github.com/laurencehw/natural-rate/releases/latest) | [View Code](https://github.com/laurencehw/natural-rate)
+
+---
+
+
 ## 🏛️ Recent Projects
 
 ### [🇿🇦 South African Economic Reform Agenda](https://github.com/laurencehw/brrr_recs)
