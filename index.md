@@ -47,9 +47,8 @@ Analysis of 10 years of parliamentary oversight reports to extract and categoriz
 * **Outcome:** Identified 5,256 specific policy recommendations and flagged potential "Quick Wins" for implementation.
 
 ### [Fiscal Policy Calculator](https://github.com/laurencehw/fiscal-policy-calculator)
-Interactive tool for modeling fiscal impacts of tax and spending changes.
+Interactive tool for modeling fiscal impacts of tax and spending changes. See the [repository](https://github.com/laurencehw/fiscal-policy-calculator) for the code.
 * **Status:** In Development
-* [View Code](https://github.com/laurencehw/fiscal-policy-calculator)
 
 ---
 
