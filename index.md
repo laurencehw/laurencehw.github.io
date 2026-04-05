@@ -49,8 +49,9 @@ A living open-source textbook on the structure and institutions of the American 
 Analysis of 10 years of parliamentary oversight reports to extract and categorize policy recommendations for the national budget. See the [repository](https://github.com/laurencehw/brrr_recs) for methodology and findings.
 * **Outcome:** Identified 5,256 specific policy recommendations and flagged potential "Quick Wins" for implementation.
 
-### [SA Policy Space](https://github.com/laurencehw/brrr_recs)
+### [SA Policy Space](https://sa-policy-space.vercel.app/about)
 Analysis of South African parliamentary committee meetings to map policy recommendations and oversight patterns.
+* **Format:** [View App](https://sa-policy-space.vercel.app/about) | [Source Code](https://github.com/laurencehw/sa-policy-space)
 * **Status:** In Development
 
 ### [Apartheid in South Africa — Digital History](https://github.com/laurencehw/digital-history)
