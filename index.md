@@ -59,7 +59,7 @@ An economic history dataset examining Apartheid in South Africa, digitizing hist
 * **Status:** In Development
 
 ### [Fiscal Policy Calculator](https://github.com/laurencehw/fiscal-policy-calculator)
-Interactive tool for modeling fiscal impacts of tax and spending changes in the US. See the [repository](https://github.com/laurencehw/fiscal-policy-calculator) for the code.
+Interactive tool for modeling fiscal impacts of tax and spending changes in the US.
 * **Status:** In Development
 
 ### [Regional Economics](https://github.com/laurencehw/regional-economics)
