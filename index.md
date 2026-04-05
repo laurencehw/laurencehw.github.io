@@ -1,6 +1,6 @@
 # Laurence Wilse-Samson
 
-I am an economist and researcher based in New York City, working as a consultant and serving as adjunct faculty at Columbia University and NYU. My work spans applied research, policy analysis, and teaching, with a focus on understanding how economic institutions shape development and how governments can use economic tools more effectively.
+I am an economist and researcher based in New York City, working as a consultant and serving as adjunct faculty at Columbia University, NYU, and the University of Johannesburg. My work spans applied research, policy analysis, tech regulation, and teaching, with a focus on understanding how economic institutions shape development and how governments can use economic tools more effectively.
 
 My interests are broad including public finance, geoeconomics, economic history, and policy.
 
@@ -18,6 +18,9 @@ My interests are broad including public finance, geoeconomics, economic history,
 
 **Columbia SIPA**
 - Understanding Emerging Technologies
+
+**University of Johannesburg CCRED**
+- Competition Policy Research Methods
 
 ---
 
@@ -46,8 +49,21 @@ A living open-source textbook on the structure and institutions of the American 
 Analysis of 10 years of parliamentary oversight reports to extract and categorize policy recommendations for the national budget. See the [repository](https://github.com/laurencehw/brrr_recs) for methodology and findings.
 * **Outcome:** Identified 5,256 specific policy recommendations and flagged potential "Quick Wins" for implementation.
 
+### [SA Policy Space](https://sa-policy-space.vercel.app/about)
+Analysis of South African parliamentary committee meetings to map policy recommendations and oversight patterns.
+* **Format:** [View App](https://sa-policy-space.vercel.app/about) | [Source Code](https://github.com/laurencehw/sa-policy-space)
+* **Status:** In Development
+
+### [Apartheid in South Africa — Digital History](https://github.com/laurencehw/digital-history)
+An economic history dataset examining Apartheid in South Africa, digitizing historical economic and electoral data.
+* **Status:** In Development
+
 ### [Fiscal Policy Calculator](https://github.com/laurencehw/fiscal-policy-calculator)
-Interactive tool for modeling fiscal impacts of tax and spending changes. See the [repository](https://github.com/laurencehw/fiscal-policy-calculator) for the code.
+Interactive tool for modeling fiscal impacts of tax and spending changes in the US.
+* **Status:** In Development
+
+### [Regional Economics](https://github.com/laurencehw/regional-economics)
+Regional economic analysis and data resources.
 * **Status:** In Development
 
 ---
