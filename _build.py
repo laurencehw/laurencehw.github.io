@@ -30,7 +30,7 @@ for slug, (title, desc, key) in PAGES.items():
     print("wrote", out.relative_to(ROOT))
 
 # Redirects so links to the old site's paths keep working.
-REDIRECTS = {"papers": "research", "apps": "tools", "courses": "teaching", "contact": ""}
+REDIRECTS = {"papers": "research", "apps": "tools", "courses": "teaching", "contact": "", "africa": "african-economic-future/"}
 for old, new in REDIRECTS.items():
     d = ROOT / old
     d.mkdir(exist_ok=True)
