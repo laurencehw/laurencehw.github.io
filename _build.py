@@ -17,6 +17,8 @@ PAGES = {
     "teaching": ("Teaching — Laurence Wilse-Samson", "Courses at NYU Wagner, Columbia SIPA, and the University of Johannesburg.", "T"),
     "tools": ("Tools — Laurence Wilse-Samson", "Interactive tools and open textbooks.", "O"),
     "cv": ("CV — Laurence Wilse-Samson", "Curriculum vitae.", "C"),
+    # GitHub Pages serves /404.html for any missing path.
+    "404": ("Page not found — Laurence Wilse-Samson", "Page not found.", None),
 }
 
 for slug, (title, desc, key) in PAGES.items():
@@ -24,7 +26,12 @@ for slug, (title, desc, key) in PAGES.items():
     head = HEAD.replace("{TITLE}", title).replace("{DESC}", desc).replace("{PATH}", f"{slug}/" if slug else "")
     for k in "RTOC":
         head = head.replace("{" + k + "}", ' aria-current="page"' if k == key else "")
-    out = ROOT / (f"{slug}/index.html" if slug else "index.html")
+    if slug == "404":
+        out = ROOT / "404.html"
+        head = head.replace('<link rel="canonical" href="https://lwilsesamson.com/404/">', '<meta name="robots" content="noindex">')
+        head = head.replace('<meta property="og:url" content="https://lwilsesamson.com/404/">\n', "")
+    else:
+        out = ROOT / (f"{slug}/index.html" if slug else "index.html")
     out.parent.mkdir(exist_ok=True)
     out.write_text(head + body + FOOT)
     print("wrote", out.relative_to(ROOT))
