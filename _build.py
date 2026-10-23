@@ -15,7 +15,8 @@ PAGES = {
     "": ("Laurence Wilse-Samson", "Economist. Associate Director at Oxford Economics; adjunct at NYU Wagner and Columbia SIPA. Research on labor markets and technological change, industrial policy, and economic history.", None),
     "research": ("Research — Laurence Wilse-Samson", "Published papers, papers under review, and work in progress.", "R"),
     "teaching": ("Teaching — Laurence Wilse-Samson", "Courses at NYU Wagner, Columbia SIPA, and the University of Johannesburg.", "T"),
-    "tools": ("Tools — Laurence Wilse-Samson", "Interactive tools and open textbooks.", "O"),
+    "textbooks": ("Textbooks — Laurence Wilse-Samson", "Twenty-one open economics textbooks, free and in progress, grouped by field: foundations, money and finance, public economics and law, political economy and development, economies from city to continent, and history and ideas.", "B"),
+    "tools": ("Tools — Laurence Wilse-Samson", "Interactive research tools: SA Policy Space, The African Economy, EconWar, and a fiscal policy calculator.", "O"),
     "cv": ("CV — Laurence Wilse-Samson", "Curriculum vitae.", "C"),
     # GitHub Pages serves /404.html for any missing path.
     "404": ("Page not found — Laurence Wilse-Samson", "Page not found.", None),
@@ -24,7 +25,7 @@ PAGES = {
 for slug, (title, desc, key) in PAGES.items():
     body = (ROOT / "_pages" / f"{slug or 'index'}.html").read_text()
     head = HEAD.replace("{TITLE}", title).replace("{DESC}", desc).replace("{PATH}", f"{slug}/" if slug else "")
-    for k in "RTOC":
+    for k in "RTBOC":
         head = head.replace("{" + k + "}", ' aria-current="page"' if k == key else "")
     if slug == "404":
         out = ROOT / "404.html"

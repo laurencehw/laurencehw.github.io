@@ -41,6 +41,9 @@ header.site a[aria-current] { text-decoration: underline; text-decoration-thickn
 @media (max-width: 520px) {
   header.site .name { flex-basis: 100%; margin-right: 0; margin-bottom: 0.3rem; }
 }
+@media (max-width: 420px) {
+  header.site { gap: 0.25rem 0.9rem; font-size: 0.86rem; }
+}
 h1 { font-weight: 500; font-size: 1.9rem; letter-spacing: -0.01em; margin: 0 0 0.5rem; text-wrap: balance; }
 h2 { font-family: var(--sans); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 2.4rem 0 0.9rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.4rem; font-weight: 600; }
 p { margin: 0 0 1rem; text-wrap: pretty; }
@@ -69,6 +72,16 @@ ul.recent { list-style: none; padding: 0; margin: 0; font-size: 0.95rem; }
 ul.recent li { margin: 0 0 0.55rem; display: grid; grid-template-columns: 5.2em 1fr; gap: 0 0.75rem; }
 ul.recent time { color: var(--muted); font-family: var(--sans); font-size: 0.8rem; letter-spacing: 0.02em; padding-top: 0.2em; white-space: nowrap; }
 .small { font-size: 0.9rem; color: var(--muted); }
+code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+/* Compact grouped bibliography: hanging indent so wrapped lines sit under the title. */
+ul.books { list-style: none; padding: 0; margin: 0; font-size: 0.9rem; line-height: 1.5; }
+ul.books li { margin: 0 0 0.5rem; padding-left: 1.1rem; text-indent: -1.1rem; text-wrap: pretty; }
+ul.books li a { color: var(--ink); font-weight: 500; text-decoration-color: var(--rule); }
+ul.books li a:hover { color: var(--link); text-decoration-color: var(--link-ul); }
+ul.books .d { color: var(--muted); }
+ul.books .d a { color: var(--muted); font-weight: 400; }
+ul.books + h2 { margin-top: 2rem; }
+ul.books + p.small { margin-top: 2rem; }
 footer {
   max-width: 640px; margin: 1.5rem auto 0; padding: 0 1rem 3rem;
   font-family: var(--sans); font-size: 0.82rem; color: var(--muted);
