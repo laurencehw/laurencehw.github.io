@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://lwilsesamson.com/sitemap.xml
