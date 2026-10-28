@@ -47,3 +47,14 @@ for old, new in REDIRECTS.items():
         f'<link rel="canonical" href="https://lwilsesamson.com/{new}"><title>Redirecting</title>'
         f'<a href="/{new}">/{new or ""}</a>\n')
     print("redirect", old, "->", "/" + new)
+
+# sitemap.xml and robots.txt
+import datetime
+today = datetime.date.today().isoformat()
+urls = ["https://lwilsesamson.com/"] + [f"https://lwilsesamson.com/{slug}/" for slug in PAGES if slug and slug != "404"]
+sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+sm += [f"  <url><loc>{u}</loc><lastmod>{today}</lastmod></url>" for u in urls]
+sm.append("</urlset>")
+(ROOT / "sitemap.xml").write_text("\n".join(sm) + "\n")
+(ROOT / "robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: https://lwilsesamson.com/sitemap.xml\n")
+print("wrote sitemap.xml, robots.txt")
