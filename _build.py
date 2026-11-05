@@ -16,7 +16,7 @@ PAGES = {
     "research": ("Research — Laurence Wilse-Samson", "Published papers, papers under review, and work in progress.", "R"),
     "teaching": ("Teaching — Laurence Wilse-Samson", "Courses at NYU Wagner, Columbia SIPA, and the University of Johannesburg.", "T"),
     "textbooks": ("Textbook experiments — Laurence Wilse-Samson", "Twenty-two open economics textbooks written with AI, free and experimental, grouped by field: foundations, money and finance, public economics and law, political economy and development, economies from city to continent, and history and ideas.", "B"),
-    "tools": ("Tools — Laurence Wilse-Samson", "Interactive research tools: SA Policy Space, Bridging African Borders, Balance of Power, EconWar, and a fiscal policy calculator.", "O"),
+    "tools": ("Tools — Laurence Wilse-Samson", "Interactive research tools: a fiscal policy calculator and a monetary policy tracker, SA Policy Space, Bridging African Borders, Balance of Power, and EconWar.", "O"),
     "cv": ("CV — Laurence Wilse-Samson", "Curriculum vitae.", "C"),
     # GitHub Pages serves /404.html for any missing path.
     "404": ("Page not found — Laurence Wilse-Samson", "Page not found.", None),
