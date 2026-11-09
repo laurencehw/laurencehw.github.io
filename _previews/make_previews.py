@@ -6,16 +6,37 @@ Reads _previews/data.json, a snapshot taken from each tool's own data files
 tools/img/<name>.svg. Each SVG carries its own light and dark colours, so it
 follows the reader's colour scheme when shown through <img>.
 
-Refresh: re-extract data.json from the tool repositories, run this script,
-then update the "as of" dates in _pages/tools.html.
+It also rewrites the three <figure> blocks in _pages/tools.html (between the
+<!-- preview:NAME --> markers): image sizes, alt text and the dated caption all
+come from the same snapshot, so a refresh cannot leave a stale date or number
+on the page.
+
+Refresh: python3 _previews/refresh_data.py --fiscal ... --sa ... --bop ...
+(rebuilds data.json from local clones of the tools), then this script, then
+python3 _build.py.
 """
 import json
+import re
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = json.loads((ROOT / "_previews" / "data.json").read_text())
 OUT = ROOT / "tools" / "img"
 OUT.mkdir(parents=True, exist_ok=True)
+PAGE = ROOT / "_pages" / "tools.html"
+
+
+def day(iso):
+    d = date.fromisoformat(iso)
+    return f"{d.day} {d:%B %Y}"
+
+
+NUM = {3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine"}
+
+
+def esc(text):
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 W = 640  # reset per variant below
 FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
@@ -31,7 +52,7 @@ STYLE = """
   .dot { fill: #1f4e79; }
   .s-impl { fill: #2d6a4f; } .s-part { fill: #8fbba2; } .s-rev { fill: #b9b6ae; }
   .s-deb { fill: #d6d3cb; } .s-prop { fill: #ebe9e3; } .s-stall { fill: #b5533c; }
-  .bar { fill: #1f4e79; } .bar2 { fill: #9fb6cc; } .pub { fill: none; stroke: #1d1d1b; stroke-width: 1.2; stroke-dasharray: 3 2; }
+  .bar { fill: #1f4e79; } .inb { fill: #ffffff; } .bar2 { fill: #9fb6cc; } .pub { fill: none; stroke: #1d1d1b; stroke-width: 1.2; stroke-dasharray: 3 2; }
   @media (prefers-color-scheme: dark) {
     text { fill: #e8e6e0; }
     .mut { fill: #9a9892; }
@@ -39,7 +60,7 @@ STYLE = """
     .ln { stroke: #8fb4d9; } .area { fill: #8fb4d9; opacity: 0.12; } .dot { fill: #8fb4d9; }
     .s-impl { fill: #5aa37f; } .s-part { fill: #2f5c45; } .s-rev { fill: #5a5954; }
     .s-deb { fill: #44433f; } .s-prop { fill: #2f2e2b; } .s-stall { fill: #c06a52; }
-    .bar { fill: #8fb4d9; } .bar2 { fill: #3d5670; } .pub { stroke: #e8e6e0; }
+    .bar { fill: #8fb4d9; } .inb { fill: #1d1d1b; } .bar2 { fill: #3d5670; } .pub { stroke: #e8e6e0; }
   }
 </style>
 """ % FONT
@@ -104,38 +125,50 @@ def sa_policy_space():
         f'of {sum(p["counts"].values())} ideas'
         for p in d["packages"]
     )
-    return svg(h, "".join(parts), "Status of 171 reform ideas, by reform package", desc)
+    total = sum(sum(p["counts"].values()) for p in d["packages"])
+    return h, svg(h, "".join(parts), f"Status of {total} reform ideas, by reform package", desc)
+
+
+def money(v):
+    v = abs(v)
+    return f"${v / 1000:.2f}T" if v >= 1000 else f"${v:.0f}bn"
 
 
 def fiscal():
+    """Each proposal's ten-year score as a share of its published estimate."""
     d = DATA["fiscal"]
     narrow = W < 500
-    rows = [
-        ("Before importers respond" if not narrow else "Before response", d["static_revenue"], "bar2"),
-        ("After they respond: the score" if not narrow else "After: the score", d["conventional_revenue"], "bar"),
-    ]
-    left, right, top, rh, gap = (112, 62, 10, 20, 12) if narrow else (200, 70, 10, 20, 12)
-    scale = (W - left - right) / (max(d["published"], d["static_revenue"]) * 1.0)
-    parts = []
-    y = top
-    for lab, v, cls in rows:
+    short = {"aca-ptc-extend-enhanced": "ACA credits", "tariff-universal-10pct": "10% tariff"}
+    mid = {"aca-ptc-extend-enhanced": "ACA premium credits", "tariff-universal-10pct": "Universal 10% tariff"}
+    left, right = (82, 104) if narrow else (150, 190)
+    top, rh, gap, top_pad = 22, 20, 14, 8
+    vmax = 120
+    X = lambda pct: left + pct / vmax * (W - left - right)
+    parts = [f'<text class="mut" x="{left}" y="12" font-size="11">Model score, % of published</text>']
+    bottom = top + top_pad + len(d["cases"]) * (rh + gap) - gap
+    for v in (0, 50, 100):
+        cls = "pub" if v == 100 else "ax"
+        parts.append(f'<line class="{cls}" x1="{X(v):.1f}" x2="{X(v):.1f}" y1="{top}" y2="{bottom + 4}"/>')
+        parts.append(f'<text class="mut" x="{X(v):.1f}" y="{bottom + 17}" font-size="11" text-anchor="middle">{"published" if v == 100 else v}</text>')
+    y = top + top_pad
+    for c in d["cases"]:
+        pct = c["model"] / c["published"] * 100
+        kind = "cost" if c["published"] > 0 else "raised"
+        lab = (short if narrow else mid)[c["id"]]
         parts.append(f'<text x="{left - 10}" y="{y + 14}" font-size="12.5" text-anchor="end">{lab}</text>')
-        parts.append(f'<rect class="{cls}" x="{left}" y="{y}" width="{v * scale:.1f}" height="{rh}"/>')
-        parts.append(f'<text x="{left + v * scale + 8:.1f}" y="{y + 14}" font-size="12">${v / 1000:.2f}T</text>')
+        parts.append(f'<rect class="bar" x="{left}" y="{y}" width="{X(pct) - left:.1f}" height="{rh}"/>')
+        parts.append(f'<text class="inb" x="{X(pct) - 6:.1f}" y="{y + 14}" font-size="12" text-anchor="end">{pct:.0f}</text>')
+        val = (f"{money(c['model'])} v {money(c['published'])}" if narrow
+               else f"{money(c['model'])} {kind}, against {money(c['published'])}")
+        parts.append(f'<text class="mut" x="{W - 4}" y="{y + 14}" font-size="11.5" text-anchor="end">{val}</text>')
         y += rh + gap
-    v = d["published"]
-    parts.append(f'<text x="{left - 10}" y="{y + 14}" font-size="12.5" text-anchor="end">{"Published" if narrow else "Tax Foundation, published"}</text>')
-    parts.append(f'<rect class="pub" x="{left + 0.6}" y="{y + 0.6}" width="{v * scale - 1.2:.1f}" height="{rh - 1.2}"/>')
-    parts.append(f'<text x="{left + v * scale + 8:.1f}" y="{y + 14}" font-size="12">${v / 1000:.2f}T</text>')
-    y += rh + gap
-    parts.append(f'<line class="ax" x1="{left}" x2="{left}" y1="{top - 4}" y2="{y - gap + 4}"/>')
-    h = y + 2
-    desc = (
-        f'Universal 10% tariff, revenue over {d["window"]}: ${d["static_revenue"] / 1000:.2f} trillion before importers respond, '
-        f'${d["conventional_revenue"] / 1000:.2f} trillion after (the calculator\'s conventional score), against '
-        f'${d["published"] / 1000:.2f} trillion published by the Tax Foundation.'
+    h = bottom + 22
+    desc = "; ".join(
+        f'{mid[c["id"]]}: {money(c["model"])} against {money(c["published"])} published by {c["published_source"]}, '
+        f'{c["model"] / c["published"] * 100:.0f}% of it'
+        for c in d["cases"]
     )
-    return svg(h, "".join(parts), "What a universal 10% tariff raises over ten years", desc)
+    return h, svg(h, "".join(parts), "Two ten-year scores against the published estimates", desc)
 
 
 def balance_of_power():
@@ -174,12 +207,72 @@ def balance_of_power():
         f"Fed central bank liquidity swaps outstanding, monthly peak of weekly levels, December 2007 to {last}: "
         f"peaks of ${peaks[0][1]:.0f} billion in {peaks[0][0]} and ${peaks[1][1]:.0f} billion in {peaks[1][0]}, near zero otherwise."
     )
-    return svg(h, "".join(parts), "Dollars lent to foreign central banks through Fed swap lines", desc)
+    return h, svg(h, "".join(parts), "Dollars lent to foreign central banks through Fed swap lines", desc)
+
+
+def page_text():
+    """Alt text and caption for each preview, from the same snapshot as the charts."""
+    sa, fi, bp = DATA["sa_policy_space"], DATA["fiscal"], DATA["balance_of_power"]
+    short = {"Infrastructure Unblock": "Infrastructure", "SMME & Employment Acceleration": "Small firms and jobs",
+             "Human Capital Pipeline": "Skills and schooling", "Trade & Industrial Competitiveness": "Trade and industry",
+             "State Capacity & Governance": "State capacity"}
+    total = sum(sum(p["counts"].values()) for p in sa["packages"])
+    sa_alt = f"Status of {total} reform ideas by package. " + " ".join(
+        f'{short[p["name"]]}: {p["counts"].get("implemented", 0) + p["counts"].get("partially_implemented", 0)} '
+        f'of {sum(p["counts"].values())}' + (" implemented or partly implemented." if k == 0 else ".")
+        for k, p in enumerate(sa["packages"])
+    )
+    sa_cap = (f"As of {day(sa['as_of'])}: status of {total} reform ideas in {NUM.get(len(sa['packages']), len(sa['packages']))} packages. "
+              "“Moving” counts ideas implemented or partly implemented.")
+
+    aca, tar = fi["cases"]
+    sc = fi["scorecard"]
+    fi_alt = (f"Ten-year scores as a share of the published estimate. Extending the enhanced ACA premium credits: "
+              f"{money(aca['model'])} cost against {money(aca['published'])} from {aca['published_source']}, "
+              f"{aca['model'] / aca['published'] * 100:.0f}%. Universal 10% tariff: {money(tar['model'])} raised against "
+              f"{money(tar['published'])} from the {tar['published_source']}, {tar['model'] / tar['published'] * 100:.0f}%.")
+    fi_cap = (f"As of {day(fi['as_of'])}: ten-year scores as a share of the published estimate (dashed line), whose "
+              f"window starts a year earlier. The credits land {round(aca['pct_from_published'])}% high; the module was "
+              f"fitted to an earlier $350bn estimate, so this is close to home ground. The tariff lands "
+              f"{round(tar['pct_from_published'])}% low with nothing fitted, which is typical where the model is not tuned: "
+              f"across the {sc['unfitted']['n']} published estimates it was not fitted to, the median gap is "
+              f"{round(sc['unfitted']['median_gap_pct'])}%, against {round(sc['fitted']['median_gap_pct'])}% for the "
+              f"{sc['fitted']['n']} it was.")
+
+    pts = bp["monthly_max_swaps_bn"]
+    months = "January February March April May June July August September October November December".split()
+    m = lambda ym: f"{months[int(ym[5:]) - 1]} {ym[:4]}"
+    pk = [max((p for p in pts if p[0] < "2010"), key=lambda p: p[1]), max((p for p in pts if p[0] > "2019"), key=lambda p: p[1])]
+    bp_alt = (f"Dollars lent to foreign central banks through Fed swap lines, {m(pts[0][0])} to {m(pts[-1][0])}: peaks "
+              f"of ${pk[0][1]:.0f} billion in {m(pk[0][0])} and ${pk[1][1]:.0f} billion in {m(pk[1][0])}, near zero otherwise.")
+    bp_cap = (f"As of {day(bp['as_of'])}: Fed central bank liquidity swaps, highest weekly level each month since "
+              f"{m(pts[0][0])}. $ billion. Federal Reserve H.4.1 via FRED.")
+    return {"sa-policy-space": (sa_alt, sa_cap), "fiscal-scores": (fi_alt, fi_cap), "fed-swap-lines": (bp_alt, bp_cap)}
 
 
 # Full-column version, and a narrow one that phones load through <picture>, so the
 # labels stay legible instead of shrinking with the image.
+heights = {}
 for W, suffix in [(640, ""), (360, "-narrow")]:
-    for name, fn in [("sa-policy-space", sa_policy_space), ("fiscal-tariff", fiscal), ("fed-swap-lines", balance_of_power)]:
-        (OUT / f"{name}{suffix}.svg").write_text(fn())
+    for name, fn in [("sa-policy-space", sa_policy_space), ("fiscal-scores", fiscal), ("fed-swap-lines", balance_of_power)]:
+        h, text = fn()
+        heights[name + suffix] = h
+        (OUT / f"{name}{suffix}.svg").write_text(text)
         print("wrote", (OUT / f"{name}{suffix}.svg").relative_to(ROOT))
+
+# The figure blocks on the Tools page. The chart links to the same page as the
+# question above it; it stays in the tab order so its alt text is announced.
+page = PAGE.read_text()
+for name, (alt, cap) in page_text().items():
+    pattern = re.compile(rf'(<!-- preview:{name} -->\s*<figure class="preview">\s*<a href="([^"]+)">).*?(</figure>)', re.S)
+    found = pattern.search(page)
+    if not found:
+        raise SystemExit(f"no <!-- preview:{name} --> block in {PAGE.relative_to(ROOT)}")
+    block = (
+        f'{found.group(1)}<picture><source media="(max-width: 520px)" srcset="/tools/img/{name}-narrow.svg" '
+        f'width="360" height="{heights[name + "-narrow"]}"><img src="/tools/img/{name}.svg" width="640" '
+        f'height="{heights[name]}" alt="{esc(alt)}"></picture></a>\n    <figcaption>{esc(cap)}</figcaption>\n  </figure>'
+    )
+    page = page[: found.start()] + block + page[found.end():]
+PAGE.write_text(page)
+print("updated", PAGE.relative_to(ROOT))
