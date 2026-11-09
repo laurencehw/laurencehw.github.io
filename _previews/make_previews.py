@@ -6,16 +6,37 @@ Reads _previews/data.json, a snapshot taken from each tool's own data files
 tools/img/<name>.svg. Each SVG carries its own light and dark colours, so it
 follows the reader's colour scheme when shown through <img>.
 
-Refresh: re-extract data.json from the tool repositories, run this script,
-then update the "as of" dates in _pages/tools.html.
+It also rewrites the three <figure> blocks in _pages/tools.html (between the
+<!-- preview:NAME --> markers): image sizes, alt text and the dated caption all
+come from the same snapshot, so a refresh cannot leave a stale date or number
+on the page.
+
+Refresh: python3 _previews/refresh_data.py --fiscal ... --sa ... --bop ...
+(rebuilds data.json from local clones of the tools), then this script, then
+python3 _build.py.
 """
 import json
+import re
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = json.loads((ROOT / "_previews" / "data.json").read_text())
 OUT = ROOT / "tools" / "img"
 OUT.mkdir(parents=True, exist_ok=True)
+PAGE = ROOT / "_pages" / "tools.html"
+
+
+def day(iso):
+    d = date.fromisoformat(iso)
+    return f"{d.day} {d:%B %Y}"
+
+
+NUM = {3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine"}
+
+
+def esc(text):
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 W = 640  # reset per variant below
 FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
@@ -104,7 +125,8 @@ def sa_policy_space():
         f'of {sum(p["counts"].values())} ideas'
         for p in d["packages"]
     )
-    return svg(h, "".join(parts), "Status of 171 reform ideas, by reform package", desc)
+    total = sum(sum(p["counts"].values()) for p in d["packages"])
+    return h, svg(h, "".join(parts), f"Status of {total} reform ideas, by reform package", desc)
 
 
 def fiscal():
@@ -135,7 +157,7 @@ def fiscal():
         f'${d["conventional_revenue"] / 1000:.2f} trillion after (the calculator\'s conventional score), against '
         f'${d["published"] / 1000:.2f} trillion published by the Tax Foundation.'
     )
-    return svg(h, "".join(parts), "What a universal 10% tariff raises over ten years", desc)
+    return h, svg(h, "".join(parts), "What a universal 10% tariff raises over ten years", desc)
 
 
 def balance_of_power():
@@ -174,12 +196,70 @@ def balance_of_power():
         f"Fed central bank liquidity swaps outstanding, monthly peak of weekly levels, December 2007 to {last}: "
         f"peaks of ${peaks[0][1]:.0f} billion in {peaks[0][0]} and ${peaks[1][1]:.0f} billion in {peaks[1][0]}, near zero otherwise."
     )
-    return svg(h, "".join(parts), "Dollars lent to foreign central banks through Fed swap lines", desc)
+    return h, svg(h, "".join(parts), "Dollars lent to foreign central banks through Fed swap lines", desc)
+
+
+def page_text():
+    """Alt text and caption for each preview, from the same snapshot as the charts."""
+    sa, fi, bp = DATA["sa_policy_space"], DATA["fiscal"], DATA["balance_of_power"]
+    short = {"Infrastructure Unblock": "Infrastructure", "SMME & Employment Acceleration": "Small firms and jobs",
+             "Human Capital Pipeline": "Skills and schooling", "Trade & Industrial Competitiveness": "Trade and industry",
+             "State Capacity & Governance": "State capacity"}
+    total = sum(sum(p["counts"].values()) for p in sa["packages"])
+    sa_alt = f"Status of {total} reform ideas by package. " + " ".join(
+        f'{short[p["name"]]}: {p["counts"].get("implemented", 0) + p["counts"].get("partially_implemented", 0)} '
+        f'of {sum(p["counts"].values())}' + (" implemented or partly implemented." if k == 0 else ".")
+        for k, p in enumerate(sa["packages"])
+    )
+    sa_cap = (f"As of {day(sa['as_of'])}: status of {total} reform ideas in {NUM.get(len(sa['packages']), len(sa['packages']))} packages. "
+              "“Moving” counts ideas implemented or partly implemented.")
+
+    w0, w1 = fi["window"].split("-")
+    window = f"{w0}–{w1[-2:]}"
+    sc = fi["scorecard"]
+    fi_alt = (f"Universal 10% tariff, revenue over {window}: ${fi['static_revenue'] / 1000:.2f} trillion before importers "
+              f"respond, ${fi['conventional_revenue'] / 1000:.2f} trillion after (the calculator's score), against "
+              f"${fi['published'] / 1000:.2f} trillion published by the Tax Foundation.")
+    fi_cap = (f"As of {day(fi['as_of'])}: revenue over {window}. The score is {round(fi['pct_from_published'])}% below "
+              f"the published figure, with nothing fitted to it, and that gap is typical of the model's untuned scores: "
+              f"across the {sc['unfitted']['n']} published estimates it was not fitted to, the median gap is "
+              f"{round(sc['unfitted']['median_gap_pct'])}%, against {round(sc['fitted']['median_gap_pct'])}% for the "
+              f"{sc['fitted']['n']} it was.")
+
+    pts = bp["monthly_max_swaps_bn"]
+    months = "January February March April May June July August September October November December".split()
+    m = lambda ym: f"{months[int(ym[5:]) - 1]} {ym[:4]}"
+    pk = [max((p for p in pts if p[0] < "2010"), key=lambda p: p[1]), max((p for p in pts if p[0] > "2019"), key=lambda p: p[1])]
+    bp_alt = (f"Dollars lent to foreign central banks through Fed swap lines, {m(pts[0][0])} to {m(pts[-1][0])}: peaks "
+              f"of ${pk[0][1]:.0f} billion in {m(pk[0][0])} and ${pk[1][1]:.0f} billion in {m(pk[1][0])}, near zero otherwise.")
+    bp_cap = (f"As of {day(bp['as_of'])}: Fed central bank liquidity swaps, highest weekly level each month since "
+              f"{m(pts[0][0])}. $ billion. Federal Reserve H.4.1 via FRED.")
+    return {"sa-policy-space": (sa_alt, sa_cap), "fiscal-tariff": (fi_alt, fi_cap), "fed-swap-lines": (bp_alt, bp_cap)}
 
 
 # Full-column version, and a narrow one that phones load through <picture>, so the
 # labels stay legible instead of shrinking with the image.
+heights = {}
 for W, suffix in [(640, ""), (360, "-narrow")]:
     for name, fn in [("sa-policy-space", sa_policy_space), ("fiscal-tariff", fiscal), ("fed-swap-lines", balance_of_power)]:
-        (OUT / f"{name}{suffix}.svg").write_text(fn())
+        h, text = fn()
+        heights[name + suffix] = h
+        (OUT / f"{name}{suffix}.svg").write_text(text)
         print("wrote", (OUT / f"{name}{suffix}.svg").relative_to(ROOT))
+
+# The figure blocks on the Tools page. The chart links to the same page as the
+# question above it; it stays in the tab order so its alt text is announced.
+page = PAGE.read_text()
+for name, (alt, cap) in page_text().items():
+    pattern = re.compile(rf'(<!-- preview:{name} -->\s*<figure class="preview">\s*<a href="([^"]+)">).*?(</figure>)', re.S)
+    found = pattern.search(page)
+    if not found:
+        raise SystemExit(f"no <!-- preview:{name} --> block in {PAGE.relative_to(ROOT)}")
+    block = (
+        f'{found.group(1)}<picture><source media="(max-width: 520px)" srcset="/tools/img/{name}-narrow.svg" '
+        f'width="360" height="{heights[name + "-narrow"]}"><img src="/tools/img/{name}.svg" width="640" '
+        f'height="{heights[name]}" alt="{esc(alt)}"></picture></a>\n    <figcaption>{esc(cap)}</figcaption>\n  </figure>'
+    )
+    page = page[: found.start()] + block + page[found.end():]
+PAGE.write_text(page)
+print("updated", PAGE.relative_to(ROOT))

@@ -62,17 +62,28 @@
   ]
  },
  "fiscal": {
-  "source": "fiscal-policy-calculator site_data/presets/tariff-universal-10pct.json and views/",
+  "source": "fiscal-policy-calculator site_data/presets/tariff-universal-10pct.json and validation/scorecard.json",
   "as_of": "2026-11-06",
   "window": "FY2026-2035",
   "static_revenue": 1922.5733233172725,
   "behavioral_offset": 541.5985180450924,
   "conventional_revenue": 1380.9748052721804,
-  "dynamic_revenue": 1544.0062357294069,
   "published": 2171.1,
   "published_source": "Tax Foundation, Fiscal Fact 861",
   "tier": "Unfitted reconstruction",
-  "pct_from_published": 36.418088900786024
+  "pct_from_published": 36.418088900786024,
+  "scorecard": {
+   "fitted": {
+    "n": 59,
+    "median_gap_pct": 8.053672259833517,
+    "within_10pct": 33
+   },
+   "unfitted": {
+    "n": 40,
+    "median_gap_pct": 33.3090630159769,
+    "within_10pct": 7
+   }
+  }
  },
  "balance_of_power": {
   "source": "balance-of-power data/hierarchy/fed-liquidity-swaps.json (FRED SWPT, weekly; monthly max here)",
@@ -92,7 +103,7 @@
    ],
    [
     "2008-03",
-    0
+    0.0
    ],
    [
     "2008-04",
@@ -188,11 +199,11 @@
    ],
    [
     "2010-03",
-    0
+    0.0
    ],
    [
     "2010-04",
-    0
+    0.0
    ],
    [
     "2010-05",
@@ -240,19 +251,19 @@
    ],
    [
     "2011-04",
-    0
+    0.0
    ],
    [
     "2011-05",
-    0
+    0.0
    ],
    [
     "2011-06",
-    0
+    0.0
    ],
    [
     "2011-07",
-    0
+    0.0
    ],
    [
     "2011-08",
