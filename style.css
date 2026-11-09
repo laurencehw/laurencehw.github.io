@@ -107,3 +107,12 @@ h2 + p.group { margin-top: 0; }
 ol.path { margin: 0.4rem 0 0; padding-left: 1.3rem; font-size: 0.95rem; }
 ol.path li { margin: 0 0 0.3rem; text-wrap: pretty; }
 ul.books + p.group { margin-top: 1.6rem; }
+/* Tools page: featured tools carry a small chart preview, a question and a deep link. */
+.entry.featured { margin-bottom: 2rem; }
+.entry .q { font-size: 0.95rem; margin: 0.35rem 0 0; }
+.entry .q a { white-space: nowrap; }
+.preview { margin: 0.55rem 0 0.5rem; }
+.preview img { display: block; width: 100%; height: auto; }
+.preview figcaption { font-family: var(--sans); font-size: 0.76rem; line-height: 1.45; color: var(--muted); margin-top: 0.35rem; }
+.entry .with { font-size: 0.88rem; color: var(--muted); margin-top: 0.35rem; }
+@media print { .preview { break-inside: avoid; } }

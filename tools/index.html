@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>Tools — Laurence Wilse-Samson</title>
-<meta name="description" content="Interactive research tools: a fiscal policy calculator and a monetary policy tracker, SA Policy Space, Bridging African Borders, Balance of Power, and EconWar.">
+<meta name="description" content="Research tools built from public data: the Fiscal Policy Calculator, SA Policy Space and Bridging African Borders for policy design and monitoring; Balance of Power and the Monetary Policy Tracker on money and the financial system; and EconWar, a statecraft simulator for teaching.">
 <meta name="author" content="Laurence Wilse-Samson">
 <link rel="stylesheet" href="/style.css">
 <link rel="canonical" href="https://lwilsesamson.com/tools/">
@@ -15,7 +15,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Laurence Wilse-Samson">
 <meta property="og:title" content="Tools — Laurence Wilse-Samson">
-<meta property="og:description" content="Interactive research tools: a fiscal policy calculator and a monetary policy tracker, SA Policy Space, Bridging African Borders, Balance of Power, and EconWar.">
+<meta property="og:description" content="Research tools built from public data: the Fiscal Policy Calculator, SA Policy Space and Bridging African Borders for policy design and monitoring; Balance of Power and the Monetary Policy Tracker on money and the financial system; and EconWar, a statecraft simulator for teaching.">
 <meta property="og:url" content="https://lwilsesamson.com/tools/">
 <meta property="og:image" content="https://lwilsesamson.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -23,7 +23,7 @@
 <meta property="og:image:alt" content="Laurence Wilse-Samson — economist, New York">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tools — Laurence Wilse-Samson">
-<meta name="twitter:description" content="Interactive research tools: a fiscal policy calculator and a monetary policy tracker, SA Policy Space, Bridging African Borders, Balance of Power, and EconWar.">
+<meta name="twitter:description" content="Research tools built from public data: the Fiscal Policy Calculator, SA Policy Space and Bridging African Borders for policy design and monitoring; Balance of Power and the Monetary Policy Tracker on money and the financial system; and EconWar, a statecraft simulator for teaching.">
 <meta name="twitter:image" content="https://lwilsesamson.com/og.png">
 </head>
 <body>
@@ -37,42 +37,71 @@
 </header>
 <main>
 <h1>Tools</h1>
-<p>Interactive research tools I have built with AI from public data: the design, the questions and the checking are mine, the code is on <a href="https://github.com/laurencehw">GitHub</a>, and each site documents its sources so that any chart or claim can be re-run. The textbook experiments, including <a href="/african-economic-future/">The African Economy</a> and its data tools, are listed on their <a href="/textbooks/">own page</a>.</p>
+<p>Research tools I have built with AI from public data. The design, the questions and the checking are mine. Each tool names the source of every number and publishes its methods; the code for the <a href="https://github.com/laurencehw/fiscal-policy-calculator">Fiscal Policy Calculator</a> is public, and code for the others is available on request. They are at different stages, and the label beside each name says which.</p>
 
-<h2>US economic policy</h2>
-<p class="small">Interactive policy trackers and models. For economic statecraft beyond just the US, see <a href="https://balanceofpower.lwilsesamson.com/">Balance of Power</a> and <a href="https://econwar.vercel.app">EconWar</a> below.</p>
-<div class="entry">
-  <div class="t"><a href="https://fiscal.lwilsesamson.com/">Fiscal Policy Calculator</a></div>
-  <div class="m">budget and macroeconomic scoring of US tax and spending proposals · <a href="https://github.com/laurencehw/fiscal-policy-calculator">source</a></div>
-  <div class="a">Scores US tax and spending proposals from IRS and FRED data on CBO conventions: static, behavioral and dynamic. Shows who pays and how far each score sits from a published one, with a Social Security reform menu, a question tool that cites its sources, and classroom problem sets. A companion to the tax and budget chapters of <a href="https://laurence-wilse-samson.gitbook.io/textbooks/public-economcis">Public Economics</a>.</div>
-</div>
-<div class="entry">
-  <div class="t"><a href="https://monetary.lwilsesamson.com/">Monetary Policy Tracker</a></div>
-  <div class="m">every Federal Reserve rate vote since 1987 · launched November 2026</div>
-  <div class="a">Every Federal Reserve rate decision since 1987 and every vote cast against one, with what the dissenter wanted and a link to the Fed's own record. Updated after each decision.</div>
+<h2>Policy design and monitoring</h2>
+
+<div class="entry featured">
+  <div class="t"><a href="https://fiscal.lwilsesamson.com/">Fiscal Policy Calculator</a><span class="status">Benchmarked</span></div>
+  <div class="m">US tax and spending proposals, scored on CBO conventions · <a href="https://github.com/laurencehw/fiscal-policy-calculator">source</a></div>
+  <p class="q"><i>What would a universal 10% tariff raise once importers respond?</i> <a href="https://fiscal.lwilsesamson.com/explore/tariff-universal-10pct">See the score, year by year&nbsp;→</a></p>
+  <figure class="preview">
+    <a href="https://fiscal.lwilsesamson.com/explore/tariff-universal-10pct" tabindex="-1" aria-hidden="true"><picture><source media="(max-width: 520px)" srcset="/tools/img/fiscal-tariff-narrow.svg" width="360" height="108"><img src="/tools/img/fiscal-tariff.svg" width="640" height="108" alt="Universal 10% tariff, revenue over FY2026–35: $1.92 trillion before importers respond, $1.38 trillion after (the calculator's score), against $2.17 trillion published by the Tax Foundation."></picture></a>
+    <figcaption>Revenue over FY2026–35. The score is an unfitted reconstruction: 36% below the published figure, with nothing fitted to it. Scores of 6 November 2026.</figcaption>
+  </figure>
+  <div class="a">Fifty-two proposals scored from IRS and FRED data, static, behavioral and dynamic, with who pays. Every score says whether it was fitted to a published estimate or compared with one it never saw; the <a href="https://fiscal.lwilsesamson.com/methods">methods page</a> sets 99 published scores against the model's. With a Social Security reform menu and problem sets for class.</div>
+  <div class="with">Read with <a href="https://laurence-wilse-samson.gitbook.io/textbooks/public-economcis">Public Economics</a>: <a href="https://laurence-wilse-samson.gitbook.io/textbooks/public-economcis/part-iv-the-revenue-side/part_iv_revenue/ch17_tax_incidence">Chapter 17, tax incidence</a>, and <a href="https://laurence-wilse-samson.gitbook.io/textbooks/public-economcis/part-v-governance-process-and-stability/part_v_governance/ch22_federal_budget">Chapter 22, the federal budget</a>.</div>
 </div>
 
-<h2>Interactive</h2>
-<div class="entry">
-  <div class="t"><a href="https://sa-policy-space.vercel.app">SA Policy Space</a></div>
-  <div class="m">research tool on South Africa's economic-reform agenda · updated weekly</div>
-  <div class="a">Reform ideas, each traced to the parliamentary committee record that raised it and to the research that bears on it, kept current by weekly harvests of Parliament, calls for comment and the literature. With a reform index, a weekly briefing and a question tool grounded in that evidence base. It tracks the agenda <a href="https://laurence-wilse-samson.gitbook.io/textbooks/the-south-african-economy">The South African Economy</a> describes.</div>
+<div class="entry featured">
+  <div class="t"><a href="https://sa-policy-space.vercel.app">SA Policy Space</a><span class="status">Live, weekly</span></div>
+  <div class="m">South Africa's economic-reform agenda, traced to Parliament and the research</div>
+  <p class="q"><i>Which reforms are moving, and which are stuck?</i> <a href="https://sa-policy-space.vercel.app/progress">Progress by package&nbsp;→</a></p>
+  <figure class="preview">
+    <a href="https://sa-policy-space.vercel.app/progress" tabindex="-1" aria-hidden="true"><picture><source media="(max-width: 520px)" srcset="/tools/img/sa-policy-space-narrow.svg" width="360" height="186"><img src="/tools/img/sa-policy-space.svg" width="640" height="173" alt="Status of 171 reform ideas by package. Infrastructure: 19 of 51 implemented or partly implemented. Small firms and jobs: 4 of 26. Skills and schooling: 7 of 30. Trade and industry: 2 of 24. State capacity: 8 of 40."></picture></a>
+    <figcaption>Status of 171 reform ideas in five packages, 9 November 2026. “Moving” counts ideas implemented or partly implemented.</figcaption>
+  </figure>
+  <div class="a">Each idea is traced to the committee sittings that raised it, from 4,273 meetings since 1998, and to the research that bears on it; every link to a paper is judged against a hand-labelled set, and the rejections are kept. Follow one idea, such as <a href="https://sa-policy-space.vercel.app/ideas/electricity-regulation-amendment-act-competitive-electricity-market">opening the electricity market</a>, from Parliament to implementation, or use the reform packages, stakeholder coalitions, open calls for public comment and the weekly briefing.</div>
+  <div class="with">Read with <a href="https://laurence-wilse-samson.gitbook.io/textbooks/the-south-african-economy">The South African Economy</a>, whose reform tables, from <a href="https://laurence-wilse-samson.gitbook.io/textbooks/the-south-african-economy/part-ii-sectors/chapter-3">Chapter 3</a> on, link each reform to its record here.</div>
 </div>
+
 <div class="entry">
-  <div class="t"><a href="https://borders.lwilsesamson.com/">Bridging African Borders</a></div>
-  <div class="m">cross-border investment policy in Africa, traced to the documents · launched October 2026, public draft</div>
-  <div class="a">The policy blockers to cross-border investment in Africa, the reforms that would remove them, and how far each has got: a dated status on each track (legal, rules, delivery, funding) and a citation that says whether a person has checked it. Deep coverage so far of cross-border payments and currency, regional power trade, transport corridors and border posts, and continental free trade under the AfCFTA. The African sibling of SA Policy Space and the policy companion to <a href="/african-economic-future/">The African Economy: The Growth Century</a>.</div>
+  <div class="t"><a href="https://borders.lwilsesamson.com/">Bridging African Borders</a><span class="status">Public draft</span></div>
+  <div class="m">the policy blockers to cross-border investment in Africa, traced to the documents · launched October 2026</div>
+  <div class="a">One blocker: <a href="https://borders.lwilsesamson.com/areas/payments">South Africa's exchange-control rules date from 1961</a>. Their replacement was published in draft in April 2026, and no final version has been found. Each reform carries a dated status on four tracks (law, rules, delivery, funding), and each citation says whether a person has checked it. Covers payments and currency, regional power trade, transport corridors and the AfCFTA. The African sibling of SA Policy Space, and the policy companion to <a href="/african-economic-future/">The African Economy</a>.</div>
 </div>
+
+<h2>Money and financial systems</h2>
+
+<div class="entry featured">
+  <div class="t"><a href="https://balanceofpower.lwilsesamson.com/">Balance of Power</a><span class="status">In development</span></div>
+  <div class="m">the global monetary system, measured · where marked, a chart is checked against a figure its source published</div>
+  <p class="q"><i>When does the world run short of dollars, and who gets them from the Fed?</i> <a href="https://balanceofpower.lwilsesamson.com/hierarchy/fed-liquidity-swaps">The swap-line chart&nbsp;→</a></p>
+  <figure class="preview">
+    <a href="https://balanceofpower.lwilsesamson.com/hierarchy/fed-liquidity-swaps" tabindex="-1" aria-hidden="true"><picture><source media="(max-width: 520px)" srcset="/tools/img/fed-swap-lines-narrow.svg" width="360" height="170"><img src="/tools/img/fed-swap-lines.svg" width="640" height="190" alt="Dollars lent to foreign central banks through Fed swap lines, December 2007 to November 2026: peaks of $583 billion in December 2008 and $449 billion in May 2020, near zero otherwise."></picture></a>
+    <figcaption>Fed central bank liquidity swaps, highest weekly level each month, December 2007 to November 2026. $ billion. Federal Reserve H.4.1 via FRED.</figcaption>
+  </figure>
+  <div class="a">Charts of the dollar system in three layers: the hierarchy of money (what dollars cost and who can borrow them when they run short), the dollar's transaction cycle (pricing, financing, risk transfer, payment, reinvestment) and the statecraft toolbox of sanctions, export controls and tariffs. It measures the past and makes no forecasts. <a href="https://balanceofpower.lwilsesamson.com/teach">Exercises for class</a> go with the charts.</div>
+  <div class="with">Read with <a href="https://laurence-wilse-samson.gitbook.io/textbooks/global-finance-a-money-view">Global Finance: A Money View</a>, <a href="https://laurence-wilse-samson.gitbook.io/textbooks/global-finance-a-money-view/part-v-central-banks/chapter-16-central-bank-cooperation">Chapter 16</a> on swap lines, and <a href="https://laurence-wilse-samson.gitbook.io/textbooks/part-vi-international/ch22_dollarsystem">Chapter 22</a> of Institutionalist Macro on the dollar system.</div>
+</div>
+
 <div class="entry">
-  <div class="t"><a href="https://econwar.vercel.app">EconWar</a></div>
-  <div class="m">simulation platform for economic statecraft · companion to the <a href="https://laurence-wilse-samson.gitbook.io/textbooks/economic-coercion">Economic Coercion</a> textbook</div>
-  <div class="a">Simulates events involving global economic coercive measures — sanctions, export controls, tariffs, and investment restrictions — and how targets and third countries respond.</div>
+  <div class="t"><a href="https://monetary.lwilsesamson.com/">Monetary Policy Tracker</a><span class="status">Live</span></div>
+  <div class="m">every Federal Reserve rate vote since 1987 · updated after each decision</div>
+  <div class="a"><a href="https://monetary.lwilsesamson.com/dissenters/">Were FOMC dissenters onto something?</a> Not much more than their usual lean predicts: across 107 rate dissents, 58% pushed toward the neutral rate, against 54% expected. Governors are the exception. With every vote and what each dissenter wanted, linked to the Fed's own record, and <a href="https://monetary.lwilsesamson.com/rstar/">four estimates of the natural rate</a>.</div>
+  <div class="with">Read with <a href="https://laurence-wilse-samson.gitbook.io/textbooks/part-iv-policy/ch13_federalreserve">Chapter 13</a> of Institutionalist Macro, on how the Committee votes.</div>
 </div>
+
+<h2>Simulation and teaching</h2>
+
 <div class="entry">
-  <div class="t"><a href="https://balanceofpower.lwilsesamson.com/">Balance of Power</a></div>
-  <div class="m">the global monetary system, measured · launched October 2026, in development</div>
-  <div class="a">Charts of the dollar system, each rebuilt from a public source and, where marked, checked against a figure the source itself published. Three layers: the hierarchy of money (what the dollar costs and who can borrow it when it runs short), the dollar's transaction cycle (pricing, financing, risk transfer, payment, reinvestment) and the statecraft toolbox. It measures the past and makes no forecasts. The data companion to <a href="https://laurence-wilse-samson.gitbook.io/textbooks/global-finance-a-money-view">Global Finance: A Money View</a>.</div>
+  <div class="t"><a href="https://econwar.vercel.app">EconWar</a><span class="status">Teaching game</span></div>
+  <div class="m">a simulator of economic statecraft · companion to <a href="https://laurence-wilse-samson.gitbook.io/textbooks/economic-coercion">Economic Coercion</a></div>
+  <div class="a"><a href="https://econwar.vercel.app/game/rand_reckoning">Play South Africa's foreign minister</a> two weeks before a BRICS summit: Washington says that if the summit adopts a reserve-currency resolution, South Africa stays off the AGOA renewal and its 30% tariff stays. Thirty-three scenarios, played from Washington, from Beijing or from a middle power that must hedge, built on the book's tabletop exercises. The scenarios are fiction set among real institutions; the advisers' dialogue is written by AI as you play. Or <a href="https://econwar.vercel.app/demo">watch a demo</a> first.</div>
+  <div class="with">Read with the <a href="https://laurence-wilse-samson.gitbook.io/textbooks/economic-coercion/appendices/appendix_a_tabletop_exercises">tabletop exercises</a> in Economic Coercion, each of which points to a scenario to replay here.</div>
 </div>
+
+<p class="small">The textbook experiments, including <a href="/african-economic-future/">The African Economy</a> and its data tools, are listed on their <a href="/textbooks/">own page</a>.</p>
 </main>
 <footer>
   <p><a href="mailto:laurence@lwilsesamson.com">laurence@lwilsesamson.com</a>&nbsp;·
