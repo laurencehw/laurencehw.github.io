@@ -103,3 +103,7 @@ footer a:hover { color: var(--ink); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 p.group { font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 1.2rem 0 0.5rem; }
 h2 + p.group { margin-top: 0; }
+/* Textbooks entrance: reading paths and field groups. */
+ol.path { margin: 0.4rem 0 0; padding-left: 1.3rem; font-size: 0.95rem; }
+ol.path li { margin: 0 0 0.3rem; text-wrap: pretty; }
+ul.books + p.group { margin-top: 1.6rem; }
