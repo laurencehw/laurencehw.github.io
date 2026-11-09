@@ -15,7 +15,8 @@ PAGES = {
     "": ("Laurence Wilse-Samson", "Economist. Associate Director at Oxford Economics; adjunct at NYU Wagner and Columbia SIPA. Research on labor markets and technological change, industrial policy, and economic history.", None),
     "research": ("Research — Laurence Wilse-Samson", "Published papers, papers under review, and work in progress.", "R"),
     "teaching": ("Teaching — Laurence Wilse-Samson", "Courses at NYU Wagner, Columbia SIPA, and the University of Johannesburg.", "T"),
-    "textbooks": ("Textbook experiments — Laurence Wilse-Samson", "Twenty-two open economics textbooks written with AI, free and experimental. Find a book by question, start with the five ready to teach from, follow a reading path or course bundle across several books, or browse all twenty-two by field.", "B"),
+    "textbooks": ("Textbook experiments — Laurence Wilse-Samson", "Twenty-two open economics textbooks written with AI, free and experimental. Find a book by question, start with the five ready to teach from, or browse all twenty-two by field.", "B"),
+    "textbooks/paths": ("Reading paths — Laurence Wilse-Samson", "Eight paths through the twenty-two textbooks for courses and readers, and the five threads that connect the collection: measurement, balance sheets, rules, power and distribution, place and history.", "B"),
     "tools": ("Tools — Laurence Wilse-Samson", "Research tools built from public data: the Fiscal Policy Calculator, SA Policy Space and Bridging African Borders for policy design and monitoring; Balance of Power and the Monetary Policy Tracker on money and the financial system; and EconWar, a statecraft simulator for teaching.", "O"),
     "cv": ("CV — Laurence Wilse-Samson", "Curriculum vitae.", "C"),
     # GitHub Pages serves /404.html for any missing path.
