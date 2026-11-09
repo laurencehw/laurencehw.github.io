@@ -52,7 +52,7 @@ STYLE = """
   .dot { fill: #1f4e79; }
   .s-impl { fill: #2d6a4f; } .s-part { fill: #8fbba2; } .s-rev { fill: #b9b6ae; }
   .s-deb { fill: #d6d3cb; } .s-prop { fill: #ebe9e3; } .s-stall { fill: #b5533c; }
-  .bar { fill: #1f4e79; } .bar2 { fill: #9fb6cc; } .pub { fill: none; stroke: #1d1d1b; stroke-width: 1.2; stroke-dasharray: 3 2; }
+  .bar { fill: #1f4e79; } .inb { fill: #ffffff; } .bar2 { fill: #9fb6cc; } .pub { fill: none; stroke: #1d1d1b; stroke-width: 1.2; stroke-dasharray: 3 2; }
   @media (prefers-color-scheme: dark) {
     text { fill: #e8e6e0; }
     .mut { fill: #9a9892; }
@@ -60,7 +60,7 @@ STYLE = """
     .ln { stroke: #8fb4d9; } .area { fill: #8fb4d9; opacity: 0.12; } .dot { fill: #8fb4d9; }
     .s-impl { fill: #5aa37f; } .s-part { fill: #2f5c45; } .s-rev { fill: #5a5954; }
     .s-deb { fill: #44433f; } .s-prop { fill: #2f2e2b; } .s-stall { fill: #c06a52; }
-    .bar { fill: #8fb4d9; } .bar2 { fill: #3d5670; } .pub { stroke: #e8e6e0; }
+    .bar { fill: #8fb4d9; } .inb { fill: #1d1d1b; } .bar2 { fill: #3d5670; } .pub { stroke: #e8e6e0; }
   }
 </style>
 """ % FONT
@@ -129,35 +129,46 @@ def sa_policy_space():
     return h, svg(h, "".join(parts), f"Status of {total} reform ideas, by reform package", desc)
 
 
+def money(v):
+    v = abs(v)
+    return f"${v / 1000:.2f}T" if v >= 1000 else f"${v:.0f}bn"
+
+
 def fiscal():
+    """Each proposal's ten-year score as a share of its published estimate."""
     d = DATA["fiscal"]
     narrow = W < 500
-    rows = [
-        ("Before importers respond" if not narrow else "Before response", d["static_revenue"], "bar2"),
-        ("After they respond: the score" if not narrow else "After: the score", d["conventional_revenue"], "bar"),
-    ]
-    left, right, top, rh, gap = (112, 62, 10, 20, 12) if narrow else (200, 70, 10, 20, 12)
-    scale = (W - left - right) / (max(d["published"], d["static_revenue"]) * 1.0)
-    parts = []
-    y = top
-    for lab, v, cls in rows:
+    short = {"aca-ptc-extend-enhanced": "ACA credits", "tariff-universal-10pct": "10% tariff"}
+    mid = {"aca-ptc-extend-enhanced": "ACA premium credits", "tariff-universal-10pct": "Universal 10% tariff"}
+    left, right = (82, 104) if narrow else (150, 190)
+    top, rh, gap, top_pad = 22, 20, 14, 8
+    vmax = 120
+    X = lambda pct: left + pct / vmax * (W - left - right)
+    parts = [f'<text class="mut" x="{left}" y="12" font-size="11">Model score, % of published</text>']
+    bottom = top + top_pad + len(d["cases"]) * (rh + gap) - gap
+    for v in (0, 50, 100):
+        cls = "pub" if v == 100 else "ax"
+        parts.append(f'<line class="{cls}" x1="{X(v):.1f}" x2="{X(v):.1f}" y1="{top}" y2="{bottom + 4}"/>')
+        parts.append(f'<text class="mut" x="{X(v):.1f}" y="{bottom + 17}" font-size="11" text-anchor="middle">{"published" if v == 100 else v}</text>')
+    y = top + top_pad
+    for c in d["cases"]:
+        pct = c["model"] / c["published"] * 100
+        kind = "cost" if c["published"] > 0 else "raised"
+        lab = (short if narrow else mid)[c["id"]]
         parts.append(f'<text x="{left - 10}" y="{y + 14}" font-size="12.5" text-anchor="end">{lab}</text>')
-        parts.append(f'<rect class="{cls}" x="{left}" y="{y}" width="{v * scale:.1f}" height="{rh}"/>')
-        parts.append(f'<text x="{left + v * scale + 8:.1f}" y="{y + 14}" font-size="12">${v / 1000:.2f}T</text>')
+        parts.append(f'<rect class="bar" x="{left}" y="{y}" width="{X(pct) - left:.1f}" height="{rh}"/>')
+        parts.append(f'<text class="inb" x="{X(pct) - 6:.1f}" y="{y + 14}" font-size="12" text-anchor="end">{pct:.0f}</text>')
+        val = (f"{money(c['model'])} v {money(c['published'])}" if narrow
+               else f"{money(c['model'])} {kind}, against {money(c['published'])}")
+        parts.append(f'<text class="mut" x="{W - 4}" y="{y + 14}" font-size="11.5" text-anchor="end">{val}</text>')
         y += rh + gap
-    v = d["published"]
-    parts.append(f'<text x="{left - 10}" y="{y + 14}" font-size="12.5" text-anchor="end">{"Published" if narrow else "Tax Foundation, published"}</text>')
-    parts.append(f'<rect class="pub" x="{left + 0.6}" y="{y + 0.6}" width="{v * scale - 1.2:.1f}" height="{rh - 1.2}"/>')
-    parts.append(f'<text x="{left + v * scale + 8:.1f}" y="{y + 14}" font-size="12">${v / 1000:.2f}T</text>')
-    y += rh + gap
-    parts.append(f'<line class="ax" x1="{left}" x2="{left}" y1="{top - 4}" y2="{y - gap + 4}"/>')
-    h = y + 2
-    desc = (
-        f'Universal 10% tariff, revenue over {d["window"]}: ${d["static_revenue"] / 1000:.2f} trillion before importers respond, '
-        f'${d["conventional_revenue"] / 1000:.2f} trillion after (the calculator\'s conventional score), against '
-        f'${d["published"] / 1000:.2f} trillion published by the Tax Foundation.'
+    h = bottom + 22
+    desc = "; ".join(
+        f'{mid[c["id"]]}: {money(c["model"])} against {money(c["published"])} published by {c["published_source"]}, '
+        f'{c["model"] / c["published"] * 100:.0f}% of it'
+        for c in d["cases"]
     )
-    return h, svg(h, "".join(parts), "What a universal 10% tariff raises over ten years", desc)
+    return h, svg(h, "".join(parts), "Two ten-year scores against the published estimates", desc)
 
 
 def balance_of_power():
@@ -214,14 +225,16 @@ def page_text():
     sa_cap = (f"As of {day(sa['as_of'])}: status of {total} reform ideas in {NUM.get(len(sa['packages']), len(sa['packages']))} packages. "
               "“Moving” counts ideas implemented or partly implemented.")
 
-    w0, w1 = fi["window"].split("-")
-    window = f"{w0}–{w1[-2:]}"
+    aca, tar = fi["cases"]
     sc = fi["scorecard"]
-    fi_alt = (f"Universal 10% tariff, revenue over {window}: ${fi['static_revenue'] / 1000:.2f} trillion before importers "
-              f"respond, ${fi['conventional_revenue'] / 1000:.2f} trillion after (the calculator's score), against "
-              f"${fi['published'] / 1000:.2f} trillion published by the Tax Foundation.")
-    fi_cap = (f"As of {day(fi['as_of'])}: revenue over {window}. The score is {round(fi['pct_from_published'])}% below "
-              f"the published figure, with nothing fitted to it, and that gap is typical of the model's untuned scores: "
+    fi_alt = (f"Ten-year scores as a share of the published estimate. Extending the enhanced ACA premium credits: "
+              f"{money(aca['model'])} cost against {money(aca['published'])} from {aca['published_source']}, "
+              f"{aca['model'] / aca['published'] * 100:.0f}%. Universal 10% tariff: {money(tar['model'])} raised against "
+              f"{money(tar['published'])} from the {tar['published_source']}, {tar['model'] / tar['published'] * 100:.0f}%.")
+    fi_cap = (f"As of {day(fi['as_of'])}: ten-year scores as a share of the published estimate (dashed line), whose "
+              f"window starts a year earlier. The credits land {round(aca['pct_from_published'])}% high; the module was "
+              f"fitted to an earlier $350bn estimate, so this is close to home ground. The tariff lands "
+              f"{round(tar['pct_from_published'])}% low with nothing fitted, which is typical where the model is not tuned: "
               f"across the {sc['unfitted']['n']} published estimates it was not fitted to, the median gap is "
               f"{round(sc['unfitted']['median_gap_pct'])}%, against {round(sc['fitted']['median_gap_pct'])}% for the "
               f"{sc['fitted']['n']} it was.")
@@ -234,14 +247,14 @@ def page_text():
               f"of ${pk[0][1]:.0f} billion in {m(pk[0][0])} and ${pk[1][1]:.0f} billion in {m(pk[1][0])}, near zero otherwise.")
     bp_cap = (f"As of {day(bp['as_of'])}: Fed central bank liquidity swaps, highest weekly level each month since "
               f"{m(pts[0][0])}. $ billion. Federal Reserve H.4.1 via FRED.")
-    return {"sa-policy-space": (sa_alt, sa_cap), "fiscal-tariff": (fi_alt, fi_cap), "fed-swap-lines": (bp_alt, bp_cap)}
+    return {"sa-policy-space": (sa_alt, sa_cap), "fiscal-scores": (fi_alt, fi_cap), "fed-swap-lines": (bp_alt, bp_cap)}
 
 
 # Full-column version, and a narrow one that phones load through <picture>, so the
 # labels stay legible instead of shrinking with the image.
 heights = {}
 for W, suffix in [(640, ""), (360, "-narrow")]:
-    for name, fn in [("sa-policy-space", sa_policy_space), ("fiscal-tariff", fiscal), ("fed-swap-lines", balance_of_power)]:
+    for name, fn in [("sa-policy-space", sa_policy_space), ("fiscal-scores", fiscal), ("fed-swap-lines", balance_of_power)]:
         h, text = fn()
         heights[name + suffix] = h
         (OUT / f"{name}{suffix}.svg").write_text(text)

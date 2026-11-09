@@ -62,16 +62,32 @@
   ]
  },
  "fiscal": {
-  "source": "fiscal-policy-calculator site_data/presets/tariff-universal-10pct.json and validation/scorecard.json",
+  "source": "fiscal-policy-calculator site_data/presets/<id>.json and validation/scorecard.json",
   "as_of": "2026-11-06",
-  "window": "FY2026-2035",
-  "static_revenue": 1922.5733233172725,
-  "behavioral_offset": 541.5985180450924,
-  "conventional_revenue": 1380.9748052721804,
-  "published": 2171.1,
-  "published_source": "Tax Foundation, Fiscal Fact 861",
-  "tier": "Unfitted reconstruction",
-  "pct_from_published": 36.418088900786024,
+  "cases": [
+   {
+    "id": "aca-ptc-extend-enhanced",
+    "label": "Enhanced ACA premium credits, extended",
+    "model": 366.18626725023734,
+    "model_window": "FY2026-2035",
+    "published": 335.0,
+    "published_source": "CBO/JCT, publication 60437",
+    "published_window": "FY2025-2034",
+    "tier": "Unfitted reconstruction",
+    "pct_from_published": 9.309333507533534
+   },
+   {
+    "id": "tariff-universal-10pct",
+    "label": "Universal 10% tariff",
+    "model": -1380.9748052721804,
+    "model_window": "FY2026-2035",
+    "published": -2171.1,
+    "published_source": "Tax Foundation, Fiscal Fact 861",
+    "published_window": "FY2025-2034",
+    "tier": "Unfitted reconstruction",
+    "pct_from_published": 36.418088900786024
+   }
+  ],
   "scorecard": {
    "fitted": {
     "n": 59,

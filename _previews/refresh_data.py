@@ -22,14 +22,17 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "data.json"
 
-TARIFF = "tariff-universal-10pct"
+# The two proposals on the Tools page: one close to its published score, and one
+# that shows the model's limits. A deficit increase is a cost; a cut is revenue.
+FISCAL_CASES = [
+    ("aca-ptc-extend-enhanced", "Enhanced ACA premium credits, extended", "CBO/JCT, publication 60437"),
+    ("tariff-universal-10pct", "Universal 10% tariff", "Tax Foundation, Fiscal Fact 861"),
+]
 
 
 def fiscal(repo):
     site = repo / "site_data"
     manifest = json.loads((site / "manifest.json").read_text())
-    conv = json.loads((site / "presets" / f"{TARIFF}.json").read_text())["conventional"]
-    cred = conv["credibility"]
     score = json.loads((site / "validation" / "scorecard.json").read_text())
     entries = score["entries"]
 
@@ -41,19 +44,26 @@ def fiscal(repo):
             "within_10pct": sum(g <= 10 for g in gaps),
         }
 
+    cases = []
+    for pid, label, source in FISCAL_CASES:
+        conv = json.loads((site / "presets" / f"{pid}.json").read_text())["conventional"]
+        cred = conv["credibility"]
+        cases.append({
+            "id": pid,
+            "label": label,
+            "model": conv["ten_year_deficit_impact"],
+            "model_window": conv["budget_window"].replace("\u2013", "-"),
+            "published": cred["own_row_official_billions"],
+            "published_source": source,
+            "published_window": cred["own_row_window"],
+            "tier": cred["own_row_tier_label"],
+            "pct_from_published": cred["own_row_abs_pct_error"],
+        })
     return {
-        "source": f"fiscal-policy-calculator site_data/presets/{TARIFF}.json and validation/scorecard.json",
+        "source": "fiscal-policy-calculator site_data/presets/<id>.json and validation/scorecard.json",
         "as_of": manifest["scores_date"],
-        "window": conv["budget_window"].replace("–", "-"),
-        # The preset scores a tariff as a deficit cut; flip signs to show revenue raised.
-        "static_revenue": conv["static_revenue_effect"],
-        "behavioral_offset": conv["behavioral_offset"],
-        "conventional_revenue": -conv["ten_year_deficit_impact"],
-        "published": -cred["own_row_official_billions"],
-        "published_source": "Tax Foundation, Fiscal Fact 861",
-        "tier": cred["own_row_tier_label"],
-        "pct_from_published": cred["own_row_abs_pct_error"],
-        # Where the tariff sits among all published comparisons on the methods page.
+        "cases": cases,
+        # Where these sit among all published comparisons on the methods page.
         "scorecard": {
             "fitted": summary([r for r in entries if r["calibrated_to_target"]]),
             "unfitted": summary([r for r in entries if not r["calibrated_to_target"]]),
