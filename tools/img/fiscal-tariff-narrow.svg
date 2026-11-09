@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 108" width="360" height="108" role="img" aria-labelledby="t d"><title id="t">What a universal 10% tariff raises over ten years</title><desc id="d">Universal 10% tariff, revenue over FY2026-2035: $1.92 trillion before importers respond, $1.38 trillion after (the calculator's conventional score), against $2.17 trillion published by the Tax Foundation.</desc>
+<style>
+  text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1d1d1b; }
+  .mut { fill: #6b6b66; }
+  .ax { stroke: #e4e2dc; stroke-width: 1; }
+  .ln { stroke: #1f4e79; stroke-width: 1.6; fill: none; }
+  .area { fill: #1f4e79; opacity: 0.08; }
+  .dot { fill: #1f4e79; }
+  .s-impl { fill: #2d6a4f; } .s-part { fill: #8fbba2; } .s-rev { fill: #b9b6ae; }
+  .s-deb { fill: #d6d3cb; } .s-prop { fill: #ebe9e3; } .s-stall { fill: #b5533c; }
+  .bar { fill: #1f4e79; } .bar2 { fill: #9fb6cc; } .pub { fill: none; stroke: #1d1d1b; stroke-width: 1.2; stroke-dasharray: 3 2; }
+  @media (prefers-color-scheme: dark) {
+    text { fill: #e8e6e0; }
+    .mut { fill: #9a9892; }
+    .ax { stroke: #33322f; }
+    .ln { stroke: #8fb4d9; } .area { fill: #8fb4d9; opacity: 0.12; } .dot { fill: #8fb4d9; }
+    .s-impl { fill: #5aa37f; } .s-part { fill: #2f5c45; } .s-rev { fill: #5a5954; }
+    .s-deb { fill: #44433f; } .s-prop { fill: #2f2e2b; } .s-stall { fill: #c06a52; }
+    .bar { fill: #8fb4d9; } .bar2 { fill: #3d5670; } .pub { stroke: #e8e6e0; }
+  }
+</style>
+<text x="102" y="24" font-size="12.5" text-anchor="end">Before response</text><rect class="bar2" x="112" y="10" width="164.7" height="20"/><text x="284.7" y="24" font-size="12">$1.92T</text><text x="102" y="56" font-size="12.5" text-anchor="end">After: the score</text><rect class="bar" x="112" y="42" width="118.3" height="20"/><text x="238.3" y="56" font-size="12">$1.38T</text><text x="102" y="88" font-size="12.5" text-anchor="end">Published</text><rect class="pub" x="112.6" y="74.6" width="184.8" height="18.8"/><text x="306.0" y="88" font-size="12">$2.17T</text><line class="ax" x1="112" x2="112" y1="6" y2="98"/></svg>
