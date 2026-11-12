@@ -18,6 +18,7 @@ PAGES = {
     "textbooks": ("Textbook experiments — Laurence Wilse-Samson", "Twenty-two open economics textbooks written with AI, free and experimental. Find a book by question, start with the five ready to teach from, or browse all twenty-two by field.", "B"),
     "textbooks/paths": ("Reading paths — Laurence Wilse-Samson", "Eight paths through the twenty-two textbooks for courses and readers, and the five threads that connect the collection: measurement, balance sheets, rules, power and distribution, place and history.", "B"),
     "tools": ("Tools — Laurence Wilse-Samson", "Research tools built from public data: the Fiscal Policy Calculator, SA Policy Space and Bridging African Borders for policy design and monitoring; Balance of Power and the Monetary Policy Tracker on money and the financial system; and EconWar, a statecraft simulator for teaching.", "O"),
+    "tools/merger-lab": ("Merger Lab — Laurence Wilse-Samson", "An in-browser merger calculator for teaching: the Herfindahl-Hirschman screen of the 2023 Merger Guidelines, upward pricing pressure, and a Bertrand-logit merger simulation, with the worked example from Antitrust Research Methods.", "O"),
     "cv": ("CV — Laurence Wilse-Samson", "Curriculum vitae.", "C"),
     # GitHub Pages serves /404.html for any missing path.
     "404": ("Page not found — Laurence Wilse-Samson", "Page not found.", None),
