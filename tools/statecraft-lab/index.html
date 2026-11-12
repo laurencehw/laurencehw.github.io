@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Statecraft Lab — Laurence Wilse-Samson</title>
+<meta name="description" content="An in-browser teaching tool on economic sanctions: what a denial costs its target today, how fast the pressure wears off as the target adapts, and fifteen coded cases from Jefferson's embargo to the chip controls. Companion to Economic Coercion.">
+<meta name="author" content="Laurence Wilse-Samson">
+<link rel="stylesheet" href="/style.css">
+<link rel="canonical" href="https://lwilsesamson.com/tools/statecraft-lab/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Laurence Wilse-Samson">
+<meta property="og:title" content="Statecraft Lab — Laurence Wilse-Samson">
+<meta property="og:description" content="An in-browser teaching tool on economic sanctions: what a denial costs its target today, how fast the pressure wears off as the target adapts, and fifteen coded cases from Jefferson's embargo to the chip controls. Companion to Economic Coercion.">
+<meta property="og:url" content="https://lwilsesamson.com/tools/statecraft-lab/">
+<meta property="og:image" content="https://lwilsesamson.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Laurence Wilse-Samson — economist, New York">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Statecraft Lab — Laurence Wilse-Samson">
+<meta name="twitter:description" content="An in-browser teaching tool on economic sanctions: what a denial costs its target today, how fast the pressure wears off as the target adapts, and fifteen coded cases from Jefferson's embargo to the chip controls. Companion to Economic Coercion.">
+<meta name="twitter:image" content="https://lwilsesamson.com/og.png">
+</head>
+<body>
+<header class="site">
+  <a class="name" href="/">Laurence Wilse-Samson</a>
+  <a href="/research/">Research</a>
+  <a href="/teaching/">Teaching</a>
+  <a href="/textbooks/">Textbook experiments</a>
+  <a href="/tools/" aria-current="page">Tools</a>
+  <a href="/cv/">CV</a>
+</header>
+<main>
+<style>
+.sl { font-variant-numeric: tabular-nums; }
+.sl .ctl { display: grid; grid-template-columns: minmax(9rem, 15rem) 1fr 3.6rem; gap: 0.25rem 0.8rem; align-items: center; font-family: var(--sans); font-size: 0.82rem; margin: 0 0 0.35rem; }
+.sl .ctl label { color: var(--ink); }
+.sl .ctl output { text-align: right; }
+.sl input[type=range] { width: 100%; accent-color: var(--link); min-width: 0; }
+.sl input:focus-visible, .sl button:focus-visible, .sl select:focus-visible { outline: 2px solid var(--link); outline-offset: 1px; }
+.sl button, .sl select { font-family: var(--sans); font-size: 0.8rem; color: var(--link); background: transparent; border: 1px solid var(--rule); border-radius: 3px; padding: 0.25rem 0.6rem; cursor: pointer; }
+.sl select { color: var(--ink); max-width: 100%; min-width: 0; }
+.sl .row label { max-width: 100%; }
+.sl button:hover { border-color: var(--link-ul); }
+.sl .row { display: flex; flex-wrap: wrap; gap: 0.4rem 0.6rem; align-items: center; font-family: var(--sans); font-size: 0.82rem; margin: 0 0 0.9rem; }
+.sl .row .lab { color: var(--muted); }
+.sl .row label { display: inline-flex; gap: 0.35rem; align-items: center; color: var(--muted); }
+.sl .figs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem 1rem; margin: 0.9rem 0; }
+.sl .figs > div { border-top: 1px solid var(--rule); padding-top: 0.45rem; }
+.sl .figs .k { font-family: var(--sans); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.03em; }
+.sl .figs .v { font-size: 1.4rem; line-height: 1.25; }
+.sl .figs .s { font-family: var(--sans); font-size: 0.72rem; color: var(--muted); }
+.sl .stack { display: flex; height: 1.1rem; margin: 0.3rem 0 0.35rem; border-radius: 1px; overflow: hidden; }
+.sl .stack span { display: block; height: 100%; }
+.sl .key { font-family: var(--sans); font-size: 0.76rem; color: var(--muted); margin: 0 0 1rem; line-height: 1.7; }
+.sl .key i { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 1px; vertical-align: -1px; margin: 0 0.25rem 0 0.7rem; }
+.sl .key i:first-child { margin-left: 0; }
+.sl .c-others { background: var(--rule); } .sl .c-shipped { background: var(--muted); } .sl .c-rerouted { background: #d4a843; }
+.sl .c-built { background: #2d6a4f; } .sl .c-missing { background: #b4532a; }
+.sl .verdict { border-left: 2px solid var(--rule); padding-left: 0.8rem; }
+.sl svg { display: block; width: 100%; height: auto; margin: 0.4rem 0 0.2rem; }
+.sl svg text { font-family: var(--sans); font-size: 11px; fill: var(--muted); }
+.sl svg .ax { stroke: var(--rule); stroke-width: 1; }
+.sl svg .p { fill: none; stroke: var(--link); stroke-width: 2; }
+.sl svg .th { stroke: #b4532a; stroke-width: 1.5; stroke-dasharray: 5 4; }
+.sl svg .win { fill: var(--link); opacity: 0.08; }
+.sl .grp { font-family: var(--sans); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.03em; margin: 0.9rem 0 0.3rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.2rem; }
+.sl .case { display: grid; grid-template-columns: 9.5rem 1fr 7.2rem; gap: 0.5rem; align-items: center; width: 100%; font-family: var(--sans); font-size: 0.8rem; margin: 0; padding: 0.22rem 0; border: 0; border-radius: 0; text-align: left; color: var(--ink); }
+.sl .case:hover .nm, .sl .case[aria-pressed=true] .nm { color: var(--link); text-decoration: underline; }
+.sl .case .track { position: relative; height: 0.9rem; border-left: 1px solid var(--rule); border-right: 1px solid var(--rule); }
+.sl .case .track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--rule); }
+.sl .case .dot { position: absolute; top: 50%; width: 0.62rem; height: 0.62rem; margin: -0.31rem 0 0 -0.31rem; border-radius: 50%; background: var(--link); border: 1.5px solid var(--link); box-sizing: border-box; }
+.sl .case .dot.open { background: var(--paper); }
+.sl .case .arrow { position: absolute; top: 50%; height: 0; border-top: 1.5px solid var(--link); right: 0; }
+.sl .case .mo { color: var(--muted); text-align: right; font-size: 0.76rem; }
+.sl .scale { display: grid; grid-template-columns: 9.5rem 1fr 7.2rem; gap: 0.5rem; font-family: var(--sans); font-size: 0.7rem; color: var(--muted); }
+.sl .scale .t { position: relative; height: 1rem; }
+.sl .scale .t span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.sl .detail { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 0.7rem 0 0.2rem; margin: 1rem 0; }
+.sl .detail h3 { margin: 0 0 0.2rem; }
+.sl .detail dl { display: grid; grid-template-columns: 8.5rem 1fr; gap: 0.3rem 0.8rem; font-size: 0.88rem; margin: 0.6rem 0; }
+.sl .detail dt { font-family: var(--sans); font-size: 0.74rem; color: var(--muted); padding-top: 0.15rem; }
+.sl .detail dd { margin: 0; }
+.sl table { border-collapse: collapse; font-family: var(--sans); font-size: 0.82rem; margin: 0 0 0.8rem; }
+.sl th { text-align: right; font-weight: 500; color: var(--muted); font-size: 0.72rem; padding: 0 0 0.3rem 1rem; border-bottom: 1px solid var(--rule); vertical-align: bottom; }
+.sl th:first-child, .sl td:first-child { text-align: left; padding-left: 0; }
+.sl td { text-align: right; padding: 0.28rem 0 0.28rem 1rem; border-bottom: 1px solid var(--rule); }
+.sl .scroll { overflow-x: auto; }
+@media (max-width: 560px) {
+  .sl .figs { grid-template-columns: repeat(2, 1fr); }
+  .sl .ctl { grid-template-columns: 1fr 3.6rem; } .sl .ctl label { grid-column: 1 / -1; }
+  .sl .case, .sl .scale { grid-template-columns: 6.4rem 1fr 5.6rem; }
+  .sl .detail dl { grid-template-columns: 1fr; gap: 0 0; } .sl .detail dd { margin-bottom: 0.5rem; }
+}
+</style>
+<div class="sl">
+<h1>Statecraft Lab</h1>
+<p class="lede">What an economic sanction costs its target on the first day, how fast that cost wears off, and how fifteen real cases turned out.</p>
+<p class="small">A teaching tool, and the companion to <a href="https://laurence-wilse-samson.gitbook.io/textbooks/economic-coercion">Economic Coercion</a>. The first part is the arithmetic of that book's model, the second a stylized picture of its race between clocks, and the third the fifteen cases the book codes, from Jefferson's embargo to the chip controls.</p>
+
+<h2>1. What a denial costs today</h2>
+<p>A coercer supplies some share of what the target uses, withholds part of it, and part of what it withholds comes back through third countries. What is left is the net withdrawal. How much that hurts depends on how far the target's market can adjust.</p>
+<div class="row"><span class="lab">Start from:</span>
+  <button type="button" data-preset="worked">The book's worked case</button>
+  <button type="button" data-preset="grain">Grain embargo, 1980</button>
+  <button type="button" data-preset="large">A 45 percent withdrawal</button>
+</div>
+<div class="ctl"><label for="sl-s">Coercer's share of the target's supply</label><input type="range" id="sl-s" min="0" max="100" step="1"><output for="sl-s"></output></div>
+<div class="ctl"><label for="sl-tau">Share of that it withholds</label><input type="range" id="sl-tau" min="0" max="100" step="1"><output for="sl-tau"></output></div>
+<div class="ctl"><label for="sl-lam">Share of withheld supply that leaks back</label><input type="range" id="sl-lam" min="0" max="100" step="1"><output for="sl-lam"></output></div>
+<div class="ctl"><label for="sl-es">Short-run adjustment elasticity</label><input type="range" id="sl-es" min="0.1" max="2" step="0.01"><output for="sl-es"></output></div>
+<div class="ctl"><label for="sl-el">Long-run adjustment elasticity</label><input type="range" id="sl-el" min="0.1" max="4" step="0.05"><output for="sl-el"></output></div>
+<div class="ctl"><label for="sl-rep">Share of the shortage replaced by new capacity in the long run</label><input type="range" id="sl-rep" min="0" max="100" step="1"><output for="sl-rep"></output></div>
+
+<div class="figs">
+  <div><div class="k">Net withdrawal</div><div class="v" id="sl-q"></div><div class="s">of the target's supply</div></div>
+  <div><div class="k">Price rise, short run</div><div class="v" id="sl-ps"></div><div class="s" id="sl-rot"></div></div>
+  <div><div class="k">Long run, same shortage</div><div class="v" id="sl-pl"></div><div class="s">the market learns to do without</div></div>
+  <div><div class="k">Long run, new capacity</div><div class="v" id="sl-pc"></div><div class="s" id="sl-ql"></div></div>
+</div>
+<div class="stack" id="sl-stack" role="img" aria-label="Where 100 units of the target's supply go"></div>
+<p class="key"><i class="c-others"></i>other suppliers<i class="c-shipped"></i>still shipped by the coercer<i class="c-rerouted"></i>rerouted through third countries<i class="c-built"></i>new capacity<i class="c-missing"></i>missing</p>
+<p class="verdict" id="sl-v1"></p>
+
+<h2>2. The race between clocks</h2>
+<p>The coercer wins if the target's government gives way before its economy adapts. Here the shortage from part 1 shrinks as the target replaces it, and the pressure on the government is the price rise on what is still missing, scaled by how much of that burden reaches anyone who decides. The government concedes only while pressure is above its threshold.</p>
+<div class="ctl"><label for="sl-h">Months for the target to replace half the shortage</label><input type="range" id="sl-h" min="1" max="120" step="1"><output for="sl-h"></output></div>
+<div class="ctl"><label for="sl-f">Share of the shortage that cannot be replaced</label><input type="range" id="sl-f" min="0" max="100" step="1"><output for="sl-f"></output></div>
+<div class="ctl"><label for="sl-w">Share of the burden that reaches those who decide</label><input type="range" id="sl-w" min="0" max="100" step="1"><output for="sl-w"></output></div>
+<div class="ctl"><label for="sl-c">Concession threshold, as a weighted price rise</label><input type="range" id="sl-c" min="1" max="100" step="1"><output for="sl-c"></output></div>
+<svg id="sl-chart" viewBox="0 0 640 250" role="img" aria-label="Pressure on the target's government over ten years, against its concession threshold"></svg>
+<p class="key"><i style="background:var(--link)"></i>politically weighted pressure<i style="background:#b4532a"></i>concession threshold<i style="background:var(--link);opacity:0.25"></i>window in which the measure can work</p>
+<p class="verdict" id="sl-v2"></p>
+<p class="small">This part is a drawing of the argument, not an estimate. The decay of the shortage and the weighting are my simplest choices of form, and the elasticity is held at its short-run value so that pressure falls only as supply is replaced. No one has measured a government's concession threshold.</p>
+
+<h2>3. Fifteen cases</h2>
+<p>The cases are the ones Economic Coercion works through, coded by me from its chapters. Each is placed by the months it took the target to replace most of what was denied. A filled dot means it had adapted by then. An open dot with an arrow means it had not adapted when the record stops, so the true figure is longer. Choose a case to read it.</p>
+<div class="row">
+  <label>Clock <select id="sl-fclock"><option value="">all</option></select></label>
+  <label>Instrument <select id="sl-fdomain"><option value="">all</option></select></label>
+  <label>Exposure <select id="sl-fband"><option value="">all</option></select></label>
+  <label>Concession <select id="sl-fcon"><option value="">all</option></select></label>
+  <span class="lab" id="sl-count"></span>
+</div>
+<div class="scale"><span></span><div class="t" id="sl-ticks"></div><span></span></div>
+<div id="sl-cases"></div>
+<div class="detail" id="sl-detail" hidden></div>
+
+<h3>Did exposure or the clock sort the concessions?</h3>
+<p>The table counts the cases shown above, leaving out those where the coercer sought to deny a capability and not to win a concession.</p>
+<div class="row"><label>Rows <select id="sl-tabrow"><option value="clock">deciding clock</option><option value="band">exposure band</option></select></label></div>
+<div class="scroll"><table id="sl-tab"><thead></thead><tbody></tbody></table></div>
+<p class="verdict" id="sl-v3"></p>
+
+<h2>What this leaves out</h2>
+<p>The exposure arithmetic is written for the denial of an input. A price cap, a reserve freeze and a ban on network access each work differently, and the book treats them in their own chapters. The pressure path has no network clock: it cannot show a sanction pushing the target's partners onto a rival payment system or standard that outlives the dispute. Leakage is held fixed, though in practice it grows with the price gap and shrinks with enforcement.</p>
+<p>The fifteen cases are not a sample. I chose them because they are well documented and famous, which favours long, large episodes against targets able to resist. The clock, exposure band, concession and verdict in each row are my judgments, and the months are taken or derived from dated statements in the chapters. The counts describe the book's cases and support no causal claim.</p>
+
+<h2>Read with</h2>
+<p><a href="https://laurence-wilse-samson.gitbook.io/textbooks/economic-coercion">Economic Coercion</a>: Chapter 1 for the model, Appendix B for the arithmetic of part 1 and an exercise on the case file, and Chapter 9 for the historical cases and the places where the model fails. For the same ideas played as decisions, see <a href="https://econwar.vercel.app">EconWar</a>.</p>
+<p class="small">Method: net withdrawal is share times fraction withheld times one minus leakage. The price rise is the exact constant-elasticity form, one minus the withdrawal raised to the power of minus one over the elasticity, less one; the rule of thumb is the withdrawal divided by the elasticity. In part 2 the replaceable shortage halves at the chosen interval.</p>
+</div>
+<script src="/tools/statecraft-cases.js"></script>
+<script src="/tools/statecraft-lab.js"></script>
+<script>
+(function () {
+  "use strict";
+  var L = window.StatecraftLab, CASES = window.STATECRAFT_CASES;
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var pct = function (x, d) {
+    if (!isFinite(x)) return "no price clears";
+    var v = 100 * x; return (v >= 1000 ? Math.round(v).toLocaleString("en-US") : v.toFixed(d == null ? (v >= 100 ? 0 : 1) : d)) + "%";
+  };
+  var PRESETS = {
+    worked: { s: 20, tau: 50, lam: 25, es: 0.3, el: 1.5, rep: 67 },
+    grain: { s: 71, tau: 68, lam: 76, es: 0.54, el: 1.5, rep: 0 },
+    large: { s: 60, tau: 100, lam: 25, es: 0.3, el: 1.5, rep: 50 }
+  };
+  var IDS = ["s", "tau", "lam", "es", "el", "rep", "h", "f", "w", "c"];
+  var DEFAULT2 = { h: 12, f: 0, w: 50, c: 10 };
+  var isPct = { s: 1, tau: 1, lam: 1, rep: 1, f: 1, w: 1, c: 1 };
+
+  function val(id) { var v = parseFloat($("sl-" + id).value); return isPct[id] ? v / 100 : v; }
+  function set(o) { Object.keys(o).forEach(function (k) { $("sl-" + k).value = o[k]; }); }
+
+  function renderModel() {
+    IDS.forEach(function (id) {
+      var el = $("sl-" + id), out = el.parentNode.querySelector("output");
+      out.textContent = id === "h" ? el.value + " mo" : isPct[id] ? el.value + "%" : parseFloat(el.value).toFixed(2);
+    });
+    var e = L.exposure({ s: val("s"), tau: val("tau"), lam: val("lam"), etaShort: val("es"), etaLong: val("el"), replaced: val("rep") });
+    $("sl-q").textContent = pct(e.q);
+    $("sl-ps").textContent = pct(e.shortRun);
+    $("sl-rot").textContent = "rule of thumb: " + pct(e.ruleOfThumb);
+    $("sl-pl").textContent = pct(e.longRunSameShortage);
+    $("sl-pc").textContent = pct(e.longRunWithCapacity);
+    $("sl-ql").textContent = "shortage falls to " + pct(e.qLong);
+    var u = L.supply(val("s"), val("tau"), val("lam"), val("rep"));
+    $("sl-stack").innerHTML = ["others", "shipped", "rerouted", "built", "missing"].map(function (k) {
+      return '<span class="c-' + k + '" style="width:' + u[k].toFixed(3) + '%"></span>';
+    }).join("");
+    $("sl-stack").setAttribute("aria-label", "Of 100 units of supply: " + u.others.toFixed(1) + " from other suppliers, " + u.shipped.toFixed(1) + " still shipped by the coercer, " + u.rerouted.toFixed(1) + " rerouted, " + u.built.toFixed(1) + " from new capacity in the long run, " + u.missing.toFixed(1) + " missing.");
+    var gap = e.shortRun - e.ruleOfThumb, v1;
+    if (e.q < 0.0005) v1 = "Nothing is withdrawn on net: the coercer supplies too little, withholds too little, or all of it leaks back.";
+    else if (!isFinite(e.shortRun)) v1 = "The whole supply is withdrawn. No price clears the market; the input is simply unavailable.";
+    else {
+      v1 = "The target loses " + pct(e.q) + " of its supply, and the price of the input rises by " + pct(e.shortRun) + " in the short run. ";
+      v1 += e.q > 0.2 && gap / e.ruleOfThumb > 0.25 ? "The rule of thumb gives " + pct(e.ruleOfThumb) + ", far too little for a withdrawal this large. " : "";
+      v1 += "Given time the same shortage costs " + pct(e.longRunSameShortage) + (val("rep") > 0 ? ", and " + pct(e.longRunWithCapacity) + " once new capacity replaces part of it." : ".") + " The gap between the first figure and the last is the leverage the coercer loses if the target's government outlasts its economy's adjustment.";
+    }
+    $("sl-v1").textContent = v1;
+    renderClocks(e.q);
+  }
+
+  function renderClocks(q) {
+    var o = { q: q, eta: val("es"), halfLife: val("h"), floor: val("f"), weight: val("w"), threshold: val("c") };
+    var T = 120, pts = L.path(o, T), win = L.windowMonths(o);
+    var W = 640, H = 250, l = 46, r = 12, t = 12, b = 34, pw = W - l - r, ph = H - t - b;
+    var p0 = isFinite(pts[0].pressure) ? pts[0].pressure : o.threshold * 4;
+    var ymax = Math.max(o.threshold * 1.6, Math.min(p0, o.threshold * 8) * 1.08, 0.02);
+    var X = function (m) { return l + pw * m / T; }, Y = function (p) { return t + ph * (1 - Math.min(p, ymax) / ymax); };
+    var s = '';
+    var wEnd = win === Infinity ? T : Math.min(win, T);
+    if (wEnd > 0) s += '<rect class="win" x="' + X(0) + '" y="' + t + '" width="' + (X(wEnd) - X(0)) + '" height="' + ph + '"/>';
+    s += '<line class="ax" x1="' + l + '" y1="' + (t + ph) + '" x2="' + (W - r) + '" y2="' + (t + ph) + '"/><line class="ax" x1="' + l + '" y1="' + t + '" x2="' + l + '" y2="' + (t + ph) + '"/>';
+    for (var yr = 0; yr <= 10; yr += 2) s += '<text x="' + X(yr * 12) + '" y="' + (H - 16) + '" text-anchor="middle">' + yr + '</text>';
+    s += '<text x="' + (l + pw / 2) + '" y="' + (H - 2) + '" text-anchor="middle">years since the measure</text>';
+    [0, 0.5, 1].forEach(function (k) { s += '<text x="' + (l - 6) + '" y="' + (Y(ymax * k) + 4) + '" text-anchor="end">' + Math.round(100 * ymax * k) + '%</text>'; });
+    s += '<line class="th" x1="' + l + '" y1="' + Y(o.threshold) + '" x2="' + (W - r) + '" y2="' + Y(o.threshold) + '"/>';
+    s += '<polyline class="p" points="' + pts.map(function (p) { return X(p.t).toFixed(1) + ',' + Y(isFinite(p.pressure) ? p.pressure : ymax).toFixed(1); }).join(' ') + '"/>';
+    $("sl-chart").innerHTML = s;
+    var v;
+    if (q < 0.0005) v = "With nothing withdrawn there is no pressure to speak of.";
+    else if (win === 0) v = "Pressure never reaches the threshold. The measure imposes costs with no prospect of a concession: the shock is too small, too little of it reaches those who decide, or the threshold is too high.";
+    else if (win === Infinity) v = "Pressure stays above the threshold for good, because part of the shortage can never be replaced. This is the case where the denied input is needed to build its own substitute. Whether the government in fact concedes is then a political question the arithmetic cannot settle.";
+    else if (win > T) v = "Pressure stays above the threshold for more than ten years. The coercer has a wide window.";
+    else {
+      var m = Math.round(win);
+      v = "Pressure is above the threshold for about " + (m < 24 ? m + " month" + (m === 1 ? "" : "s") : (win / 12).toFixed(1) + " years") + ". After that the measure still costs both sides but can no longer compel. A coercer who needs longer than that has to slow the target's adaptation or reach the people who decide.";
+    }
+    $("sl-v2").textContent = v;
+  }
+
+  // ---- cases ----
+  var NAMES = {
+    clock: { adaptation: "Adaptation clock", political: "Political clock", network: "Network clock" },
+    band: { high: "high", med: "medium", low: "low" },
+    concession: { yes: "conceded", partial: "partial concession", no: "no concession", unattributed: "demand met, not attributed to the measure", not_sought: "none sought" },
+    verdict: { predicted: "predicted", partly: "partly predicted", failed: "the model failed" },
+    tipped: { yes: "yes", no: "no", partial: "partly", untested: "not yet tested" }
+  };
+  var ORDER = { clock: ["adaptation", "political", "network"], band: ["high", "med", "low"], concession: ["yes", "partial", "unattributed", "no"] };
+  var MIN = 6, MAX = 600, selected = null;
+  var pos = function (m) { return 100 * Math.log(Math.max(MIN, Math.min(MAX, m)) / MIN) / Math.log(MAX / MIN); };
+
+  function fillSelect(id, key, names) {
+    var seen = [];
+    CASES.forEach(function (c) { if (seen.indexOf(c[key]) < 0) seen.push(c[key]); });
+    if (ORDER[key]) seen.sort(function (a, b) { return ORDER[key].indexOf(a) - ORDER[key].indexOf(b); });
+    $(id).insertAdjacentHTML("beforeend", seen.map(function (v) { return '<option value="' + esc(v) + '">' + esc(names && names[v] ? names[v].toLowerCase() : v) + '</option>'; }).join(""));
+  }
+  function shown() {
+    var f = { clock: $("sl-fclock").value, domain: $("sl-fdomain").value, band: $("sl-fband").value, concession: $("sl-fcon").value };
+    return CASES.filter(function (c) { return Object.keys(f).every(function (k) { return !f[k] || c[k] === f[k]; }); });
+  }
+  function monthsText(c) {
+    if (c.months == null) return c.basis === "not_needed" ? "no adaptation needed" : "no date given";
+    var m = c.months >= 48 ? Math.round(c.months / 12) + " yr" : c.months + " mo";
+    return c.basis === "lower_bound" ? "not in " + m : c.basis === "upper_bound" ? "within " + m : "about " + m;
+  }
+  function renderCases() {
+    var list = shown(), html = "";
+    $("sl-count").textContent = list.length + " of " + CASES.length + " cases";
+    ORDER.clock.forEach(function (k) {
+      var g = list.filter(function (c) { return c.clock === k; }).sort(function (a, b) { return (a.months == null ? 1e9 : a.months) - (b.months == null ? 1e9 : b.months); });
+      if (!g.length) return;
+      html += '<div class="grp">' + NAMES.clock[k] + '</div>';
+      g.forEach(function (c) {
+        var mark = "";
+        if (c.months != null) {
+          var p = pos(c.months), open = c.basis === "lower_bound";
+          mark = (open ? '<span class="arrow" style="left:' + p + '%"></span>' : "") + '<span class="dot' + (open ? " open" : "") + '" style="left:' + p + '%"></span>';
+        }
+        html += '<button type="button" class="case" data-id="' + c.id + '" aria-pressed="' + (selected === c.id) + '"><span class="nm">' + esc(c.label) + '</span><span class="track">' + mark + '</span><span class="mo">' + monthsText(c) + '</span></button>';
+      });
+    });
+    $("sl-cases").innerHTML = html || '<p class="small">No case matches these filters.</p>';
+    if (selected && !list.some(function (c) { return c.id === selected; })) { selected = null; $("sl-detail").hidden = true; }
+    renderTab(list);
+  }
+  function renderDetail() {
+    var c = CASES.filter(function (x) { return x.id === selected; })[0], d = $("sl-detail");
+    if (!c) { d.hidden = true; return; }
+    var terms = [];
+    if (c.s != null) terms.push("coercer's share " + pct(c.s, 0));
+    if (c.tau != null) terms.push("withheld " + pct(c.tau, 0));
+    if (c.lam != null) terms.push("leaked back " + pct(c.lam, 0));
+    if (c.q != null) terms.push("net withdrawal " + pct(c.q, 0));
+    var can = c.s != null && c.tau != null && c.lam != null;
+    d.innerHTML = '<h3>' + esc(c.name) + ', ' + esc(c.years.replace(/-/g, "–")) + '</h3>' +
+      '<p class="small">' + esc(c.coercer) + ' against ' + esc(c.target) + '. ' + esc(c.instrument.charAt(0).toUpperCase() + c.instrument.slice(1)) + '.</p><dl>' +
+      '<dt>First shock</dt><dd>' + esc(c.impact) + '</dd>' +
+      '<dt>Adaptation</dt><dd>' + esc(c.adaptation) + ' (' + monthsText(c) + '.)</dd>' +
+      '<dt>Exposure</dt><dd>' + NAMES.band[c.band] + (terms.length ? ": " + terms.join(", ") : "; the book gives no figures for the terms") + '</dd>' +
+      '<dt>Deciding clock</dt><dd>' + NAMES.clock[c.clock].replace(" clock", "") + '; rival network tipped: ' + NAMES.tipped[c.tipped] + '</dd>' +
+      '<dt>Outcome</dt><dd>' + NAMES.concession[c.concession].charAt(0).toUpperCase() + NAMES.concession[c.concession].slice(1) + '. Against the model: ' + NAMES.verdict[c.verdict] + '.</dd>' +
+      '<dt>Where to read it</dt><dd>' + esc(c.source) + '</dd></dl>' +
+      (can ? '<p><button type="button" id="sl-load">Load this case into part 1</button></p><p class="small">The book rounds these terms, so the net withdrawal in part 1 can differ from the book\'s by a point. The elasticities stay as you set them.</p>' : '');
+    d.hidden = false;
+    if (can) $("sl-load").onclick = function () {
+      set({ s: Math.round(100 * c.s), tau: Math.round(100 * c.tau), lam: Math.round(100 * c.lam), rep: 0 });
+      renderModel(); $("sl-s").scrollIntoView({ block: "center" });
+    };
+  }
+  function renderTab(list) {
+    var key = $("sl-tabrow").value, sought = list.filter(function (c) { return c.concession !== "not_sought"; });
+    var tab = L.tabulate(sought, key, "concession"), cols = ORDER.concession;
+    var short = { yes: "Conceded", partial: "Partial", unattributed: "Met, not attributed", no: "No concession" };
+    $("sl-tab").querySelector("thead").innerHTML = "<tr><th>" + (key === "clock" ? "Deciding clock" : "Exposure band") + "</th>" + cols.map(function (k) { return "<th>" + short[k] + "</th>"; }).join("") + "<th>Cases</th></tr>";
+    $("sl-tab").querySelector("tbody").innerHTML = ORDER[key].filter(function (r) { return tab.counts[r]; }).map(function (r) {
+      var n = 0; cols.forEach(function (k) { n += tab.counts[r][k] || 0; });
+      return "<tr><td>" + (key === "clock" ? NAMES.clock[r].replace(" clock", "") : NAMES.band[r].charAt(0).toUpperCase() + NAMES.band[r].slice(1)) + "</td>" + cols.map(function (k) { return "<td>" + (tab.counts[r][k] || "·") + "</td>"; }).join("") + "<td>" + n + "</td></tr>";
+    }).join("");
+    var won = sought.filter(function (c) { return c.concession === "yes" || c.concession === "partial"; });
+    var onPol = won.filter(function (c) { return c.clock === "political"; }).length;
+    var fast = L.adaptedWithin(list, 24);
+    $("sl-v3").textContent = !sought.length ? "None of the cases shown sought a concession." :
+      "Of the " + sought.length + " cases shown where a concession was sought, " + won.length + " ended in a full or partial one" +
+      (won.length ? ", " + (onPol === won.length ? "all" : onPol) + " of them decided on the political clock" : "") + ". " +
+      fast.length + " of the " + list.length + " cases shown had adapted within two years" + (fast.length ? ": " + fast.map(function (c) { return c.label; }).join("; ") : "") + ".";
+  }
+
+  // ---- wiring ----
+  IDS.forEach(function (id) { $("sl-" + id).addEventListener("input", renderModel); });
+  Array.prototype.forEach.call(document.querySelectorAll(".sl [data-preset]"), function (b) {
+    b.addEventListener("click", function () { set(PRESETS[b.getAttribute("data-preset")]); renderModel(); });
+  });
+  fillSelect("sl-fclock", "clock", NAMES.clock); fillSelect("sl-fdomain", "domain"); fillSelect("sl-fband", "band", NAMES.band); fillSelect("sl-fcon", "concession", NAMES.concession);
+  ["sl-fclock", "sl-fdomain", "sl-fband", "sl-fcon"].forEach(function (id) { $(id).addEventListener("change", renderCases); });
+  $("sl-tabrow").addEventListener("change", function () { renderTab(shown()); });
+  $("sl-cases").addEventListener("click", function (ev) {
+    var b = ev.target.closest(".case"); if (!b) return;
+    selected = selected === b.getAttribute("data-id") ? null : b.getAttribute("data-id");
+    renderCases(); renderDetail();
+  });
+  $("sl-ticks").innerHTML = [[6, "6 mo"], [12, "1 yr"], [24, "2"], [60, "5"], [120, "10"], [300, "25"], [600, "50 yr"]].map(function (t) { return '<span style="left:' + pos(t[0]) + '%">' + t[1] + '</span>'; }).join("");
+  set(PRESETS.worked); set(DEFAULT2);
+  renderModel(); renderCases();
+})();
+</script>
+</main>
+<footer>
+  <p><a href="mailto:laurence@lwilsesamson.com">laurence@lwilsesamson.com</a>&nbsp;·
+  <a href="https://scholar.google.com/citations?user=2VYSo5EAAAAJ">Google Scholar</a>&nbsp;·
+  <a href="https://github.com/laurencehw">GitHub</a>&nbsp;·
+  <a href="https://www.linkedin.com/in/laurence-w-764b562/">LinkedIn</a></p>
+</footer>
+</body>
+</html>
