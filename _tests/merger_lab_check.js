@@ -1,7 +1,8 @@
 // Checks tools/merger-lab.js on the worked example from Antitrust Research Methods (Chapter 6).
 // Run: node _tests/merger_lab_check.js
-// The expected prices come from an independent NumPy port of run_logit_sim() in the book's
-// program/R/helpers.R; the first-order conditions are also checked directly.
+// The expected prices come from run_logit_sim() in the book's program/R/helpers.R, run in R 4.5.2
+// on 2026-11-18 (10.6553150796, 12.6553150796, 12.4923375294, 10.6397329731; alpha 0.4977962858),
+// and from an independent NumPy port of it; the first-order conditions are also checked directly.
 const assert = require("assert");
 const M = require("../tools/merger-lab.js");
 const P = [["Product 1", "Firm A", 10, 0.25, 0.33], ["Product 2", "Firm A", 12, 0.15, 0.28],
