@@ -37,6 +37,8 @@
 </header>
 <main>
 <style>
+.ml { --warn: #b4532a; --neg: #2d6a4f; }
+@media (prefers-color-scheme: dark) { .ml { --warn: #e07a52; --neg: #52b788; } }
 .ml table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
 .ml th { text-align: left; font-weight: 500; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.03em; padding: 0 0.4rem 0.35rem 0; border-bottom: 1px solid var(--rule); vertical-align: bottom; }
 .ml td { padding: 0.32rem 0.4rem 0.32rem 0; border-bottom: 1px solid var(--rule); vertical-align: middle; }
@@ -51,7 +53,8 @@
 .ml input:focus-visible, .ml button:focus-visible { outline: 2px solid var(--link); outline-offset: 1px; }
 .ml button { font-family: var(--sans); font-size: 0.8rem; color: var(--link); background: transparent; border: 1px solid var(--rule); border-radius: 3px; padding: 0.25rem 0.6rem; cursor: pointer; }
 .ml button:hover { border-color: var(--link-ul); }
-.ml button.x { border: 0; color: var(--muted); padding: 0.1rem 0.35rem; font-size: 1rem; line-height: 1; }
+.ml button.x { border: 0; color: var(--muted); padding: 0.3rem 0.45rem; min-width: 2.1rem; min-height: 2.1rem; font-size: 1rem; line-height: 1; }
+.ml button.x:hover { color: var(--ink); }
 .ml .row { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; align-items: center; font-family: var(--sans); font-size: 0.82rem; margin: 0 0 0.8rem; }
 .ml .row label { display: inline-flex; gap: 0.35rem; align-items: center; }
 .ml .row .lab { color: var(--muted); }
@@ -61,18 +64,18 @@
 .ml .figs .k { font-family: var(--sans); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.03em; }
 .ml .figs .v { font-size: 1.5rem; font-variant-numeric: tabular-nums; line-height: 1.25; }
 .ml .verdict { border-left: 2px solid var(--rule); padding-left: 0.8rem; }
-.ml .verdict.flag { border-left-color: #b4532a; }
-.ml .err { font-family: var(--sans); font-size: 0.85rem; color: #b4532a; }
+.ml .verdict.flag { border-left-color: var(--warn); }
+.ml .err { font-family: var(--sans); font-size: 0.85rem; color: var(--warn); }
 .ml .bar { display: grid; grid-template-columns: 7.5rem 1fr 3.6rem; gap: 0.5rem; align-items: center; font-family: var(--sans); font-size: 0.8rem; margin: 0 0 0.3rem; font-variant-numeric: tabular-nums; }
 .ml .bar .track { height: 0.7rem; position: relative; }
 .ml .bar .fill { position: absolute; top: 0; bottom: 0; background: var(--link); border-radius: 1px; min-width: 1px; }
 .ml .bar .fill.rival { background: var(--muted); }
-.ml .bar .fill.neg { background: #2d6a4f; }
+.ml .bar .fill.neg { background: var(--neg); }
 .ml .bar .axis { position: absolute; top: -2px; bottom: -2px; width: 1px; background: var(--muted); }
 .ml .bar .pc { text-align: right; }
-.ml .key { font-family: var(--sans); font-size: 0.76rem; color: var(--muted); margin: 0.4rem 0 1rem; }
-.ml .key i { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 1px; vertical-align: -1px; margin: 0 0.25rem 0 0.7rem; }
-.ml .key i:first-child { margin-left: 0; }
+.ml .key { font-family: var(--sans); font-size: 0.76rem; color: var(--muted); margin: 0.4rem 0 1rem; line-height: 1.7; }
+.ml .key .item { display: inline-flex; align-items: center; gap: 0.3rem; margin-right: 0.85rem; white-space: nowrap; }
+.ml .key i { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 1px; }
 @media (max-width: 480px) { .ml .figs { grid-template-columns: repeat(2, 1fr); } .ml .bar { grid-template-columns: 5.5rem 1fr 3.4rem; } }
 </style>
 <div class="ml">
@@ -99,14 +102,14 @@
   <div><div class="k">HHI after</div><div class="v" id="ml-hhi-post"></div></div>
   <div><div class="k">Change</div><div class="v" id="ml-hhi-delta"></div></div>
 </div>
-<p class="verdict" id="ml-hhi-verdict"></p>
+<p class="verdict" id="ml-hhi-verdict" aria-live="polite"></p>
 <p class="small">The Herfindahl-Hirschman Index is the sum of squared firm shares, in percent, of sales inside the market. The 2023 US Merger Guidelines presume harm when the index ends above 1,800 and rises by more than 100, or when the merged firm's share exceeds 30 percent with the same rise. It is a presumption that evidence can rebut.</p>
 
 <h2>2. Pricing pressure</h2>
-<p>After the merger, some of the customers a product loses when its price rises go to its new partner, and the merged firm keeps the margin on them. Upward pricing pressure values that recapture: diversion to the partner's products times the margin earned there, less any saving in cost.</p>
+<p>After the merger, some of the customers a product loses when its price rises go to its new partner, and the merged firm keeps the margin on them. Upward pricing pressure values that recapture: diversion to the partner's products times the margin earned there, less the product's own saving in cost. An efficiency lowers the cost of every merging product, so it also raises the margin on the partner's diverted sales.</p>
 <div class="row">
-  <label><span class="lab">Efficiency (fall in marginal cost)</span><input type="range" id="ml-eff" min="0" max="15" step="0.5" value="0"><output id="ml-eff-o"></output></label>
-  <label><span class="lab">Pass-through</span><input type="range" id="ml-pt" min="0.25" max="1.5" step="0.05" value="0.5"><output id="ml-pt-o"></output></label>
+  <label><span class="lab">Efficiency (fall in marginal cost)</span><input type="range" id="ml-eff" min="0" max="15" step="0.5" value="0"><output id="ml-eff-o" for="ml-eff"></output></label>
+  <label><span class="lab">Pass-through</span><input type="range" id="ml-pt" min="0.25" max="1.5" step="0.05" value="0.5"><output id="ml-pt-o" for="ml-pt"></output></label>
 </div>
 <div class="scroll">
 <table id="ml-upp">
@@ -119,14 +122,14 @@
 <h2>3. Simulation</h2>
 <p>The screens above hold everyone else's prices fixed. The simulation does not. It fits a logit demand system to the shares and margins, then solves for the prices at which no firm, merged or rival, wants to change its price again.</p>
 <div id="ml-bars"></div>
-<p class="key"><i style="background:var(--link)"></i>merging products<i style="background:var(--muted)"></i>rivals<i style="background:#2d6a4f"></i>price falls</p>
+<p class="key"><span class="item"><i style="background:var(--link)"></i>merging products</span><span class="item"><i style="background:var(--muted)"></i>rivals</span><span class="item"><i style="background:var(--neg)"></i>price falls</span></p>
 <div class="scroll">
 <table id="ml-sim">
   <thead><tr><th>Product</th><th>Owner after</th><th class="n">Price before</th><th class="n">Price after</th><th class="n">Change</th><th class="n">Share before</th><th class="n">Share after</th></tr></thead>
   <tbody></tbody>
 </table>
 </div>
-<p class="verdict" id="ml-sim-verdict"></p>
+<p class="verdict" id="ml-sim-verdict" aria-live="polite"></p>
 <p class="small" id="ml-sim-note"></p>
 </div>
 
@@ -164,6 +167,10 @@
     drawFirms();
   }
   function firms() { var seen = []; rows.forEach(function (r) { var f = r.firm.trim(); if (f && seen.indexOf(f) < 0) seen.push(f); }); return seen; }
+  function nextFirmName() {          // first unused "Firm X", so a new row never joins an existing firm
+    var existing = firms(), n = existing.length;
+    for (;;) { var cand = n < 26 ? "Firm " + String.fromCharCode(65 + n) : "Firm " + (n + 1); if (existing.indexOf(cand) < 0) return cand; n++; }
+  }
   function drawFirms() {
     var fs = firms(); merging = merging.filter(function (f) { return fs.indexOf(f) >= 0; });
     $("ml-firms").innerHTML = fs.map(function (f) { return '<label><input type="checkbox" value="' + esc(f) + '"' + (merging.indexOf(f) >= 0 ? " checked" : "") + "> " + esc(f) + "</label>"; }).join("");
@@ -181,13 +188,13 @@
       if (merging.length < 2) throw new Error("Choose at least two merging firms.");
       var sim = MergerLab.simulate(P, merging, { efficiency: eff }), h = MergerLab.hhi(P, merging), u = MergerLab.upp(P, merging, eff, pt);
       if (!sim.converged) throw new Error("The simulation did not settle on a set of prices for these inputs.");
-    } catch (e) { err.textContent = e.message; err.hidden = false; out.style.opacity = 0.35; return; }
-    err.hidden = true; out.style.opacity = 1;
+    } catch (e) { err.textContent = e.message; err.hidden = false; out.style.opacity = 0.35; out.inert = true; out.setAttribute("aria-hidden", "true"); return; }
+    err.hidden = true; out.style.opacity = 1; out.inert = false; out.removeAttribute("aria-hidden");
 
     $("ml-hhi-pre").textContent = num(h.pre); $("ml-hhi-post").textContent = num(h.post); $("ml-hhi-delta").textContent = "+" + num(h.delta);
     var v = $("ml-hhi-verdict"), flag = h.presumedHHI || h.presumedShare;
     v.className = "verdict" + (flag ? " flag" : "");
-    v.textContent = "The merged firm would hold " + pct(h.combinedShare / 100) + " of sales in the market. " + (h.presumedHHI ? "The index ends above 1,800 and rises by more than 100, so the Guidelines presume the merger lessens competition." : h.presumedShare ? "Its share exceeds 30 percent and the index rises by more than 100, so the Guidelines presume the merger lessens competition." : "Neither structural presumption in the Guidelines is met.");
+    v.textContent = "The merged firm would hold " + pct(h.combinedShare / 100) + " of sales in the market. " + (h.presumedHHI && h.presumedShare ? "Both structural presumptions in the Guidelines are met: the index ends above 1,800, the merged share exceeds 30 percent, and the index rises by more than 100." : h.presumedHHI ? "The index ends above 1,800 and rises by more than 100, so the Guidelines presume the merger lessens competition." : h.presumedShare ? "Its share exceeds 30 percent and the index rises by more than 100, so the Guidelines presume the merger lessens competition." : "Neither structural presumption in the Guidelines is met.");
 
     $("ml-upp").tBodies[0].innerHTML = u.map(function (x) {
       return x ? "<tr><td>" + esc(x.product) + '</td><td class="n">' + pct(x.diversionToPartner) + '</td><td class="n">' + pct(x.guppi) + '</td><td class="n">' + signed(x.uppIndex) + '</td><td class="n">' + signed(x.firstOrderPct) + "</td></tr>" : "";
@@ -196,30 +203,43 @@
     var name = merging.join("+"), max = Math.max.apply(null, sim.pctChange.map(Math.abs).concat([0.01])), anyNeg = sim.pctChange.some(function (c) { return c < 0; });
     $("ml-bars").innerHTML = P.map(function (p, j) {
       var c = sim.pctChange[j], w = 100 * Math.abs(c) / max * (anyNeg ? 0.5 : 1), left = anyNeg ? (c < 0 ? 50 - w : 50) : 0;
-      return '<div class="bar"><span>' + esc(p.product) + '</span><span class="track">' + (anyNeg ? '<span class="axis" style="left:50%"></span>' : "") + '<span class="fill' + (c < 0 ? " neg" : sim.ownershipPost[j] === name ? "" : " rival") + '" style="left:' + left + "%;width:" + w + '%"></span></span><span class="pc">' + signed(c) + "</span></div>";
+      return '<div class="bar"><span>' + esc(p.product) + '</span><span class="track">' + (anyNeg ? '<span class="axis" style="left:50%"></span>' : "") + '<span class="fill' + (c < 0 ? " neg" : sim.isMerged[j] ? "" : " rival") + '" style="left:' + left + "%;width:" + w + '%"></span></span><span class="pc">' + signed(c) + "</span></div>";
     }).join("");
     $("ml-sim").tBodies[0].innerHTML = P.map(function (p, j) {
       return "<tr><td>" + esc(p.product) + "</td><td>" + esc(sim.ownershipPost[j]) + '</td><td class="n">' + sim.pricesPre[j].toFixed(2) + '</td><td class="n">' + sim.pricesPost[j].toFixed(2) + '</td><td class="n">' + signed(sim.pctChange[j]) + '</td><td class="n">' + pct(sim.sharesPre[j]) + '</td><td class="n">' + pct(sim.sharesPost[j]) + "</td></tr>";
     }).join("");
     var wm = 0, sm = 0, fo = 0, so = 0, k = 0;
-    P.forEach(function (p, j) { if (sim.ownershipPost[j] === name) { wm += sim.sharesPre[j] * sim.pctChange[j]; sm += sim.sharesPre[j]; if (u[j]) { fo += sim.sharesPre[j] * u[j].firstOrderPct; } } else { so += sim.pctChange[j]; k++; } });
+    P.forEach(function (p, j) { if (sim.isMerged[j]) { wm += sim.sharesPre[j] * sim.pctChange[j]; sm += sim.sharesPre[j]; if (u[j]) { fo += sim.sharesPre[j] * u[j].firstOrderPct; } } else { so += sim.pctChange[j]; k++; } });
     var avg = wm / sm, sv = $("ml-sim-verdict");
     sv.className = "verdict" + (avg > 0.05 ? " flag" : "");
-    sv.textContent = "The merging products' prices " + (avg >= 0 ? "rise" : "fall") + " by " + pct(Math.abs(avg)) + " on average, weighted by share, against " + pct(Math.abs(fo / sm)) + " from the first-order screen." + (k ? " Rivals' prices " + (so / k >= 0 ? "rise" : "fall") + " by " + pct(Math.abs(so / k)) + " on average." : "") + " The outside option grows from " + pct(sim.outsidePre) + " to " + pct(sim.outsidePost) + " of the market.";
+    sv.textContent = "The merging products' prices " + (avg >= 0 ? "rise" : "fall") + " by " + pct(Math.abs(avg)) + " on average, weighted by share, against " + signed(fo / sm) + " from the first-order screen." + (k ? " Rivals' prices " + (so / k >= 0 ? "rise" : "fall") + " by " + pct(Math.abs(so / k)) + " on average." : "") + " The outside option " + (sim.outsidePost >= sim.outsidePre ? "grows" : "shrinks") + " from " + pct(sim.outsidePre) + " to " + pct(sim.outsidePost) + " of the market.";
     var spread = Math.max.apply(null, sim.alphaImplied) / Math.min.apply(null, sim.alphaImplied);
-    $("ml-sim-note").textContent = "Calibrated price coefficient " + sim.alpha.toFixed(3) + "; own-price elasticities from " + Math.min.apply(null, sim.ownElasticity).toFixed(2) + " to " + Math.max.apply(null, sim.ownElasticity).toFixed(2) + ". Consumers " + (sim.consumerSurplusChange <= 0 ? "lose " : "gain ") + Math.abs(sim.consumerSurplusChange).toFixed(2) + " per potential buyer, in the units of the prices." + (spread > 1.5 ? " The margins you entered imply price coefficients that differ by a factor of " + spread.toFixed(1) + " across products, so a single logit model fits them poorly; treat the simulation with more caution than usual." : "");
+    $("ml-sim-note").textContent = "Calibrated price coefficient " + sim.alpha.toFixed(3) + "; own-price elasticities from " + Math.min.apply(null, sim.ownElasticity).toFixed(2) + " to " + Math.max.apply(null, sim.ownElasticity).toFixed(2) + ". Consumers " + (sim.consumerSurplusChange <= 0 ? "lose " : "gain ") + Math.abs(sim.consumerSurplusChange).toFixed(2) + " per potential buyer, in the units of the prices." + (spread > 1.5 ? " The margins you entered imply price coefficients that differ by a factor of " + spread.toFixed(1) + " across products, so a single logit model fits them poorly; treat the simulation with more caution than usual." : "") +
+      (sim.negativeMc.length ? " The calibrated model implies a negative marginal cost for " + sim.negativeMc.map(function (j) { return P[j].product; }).join(", ") + ", so the inputs are inconsistent with single-coefficient logit and the efficiency results for that product mean little." : "");
   }
 
   var root = document.querySelector(".ml");
   root.addEventListener("input", function (e) {
     var t = e.target;
-    if (t.dataset && t.dataset.f) { rows[+t.dataset.i][t.dataset.f] = t.value; if (t.dataset.f === "firm") drawFirms(); }
+    if (t.dataset && t.dataset.f) {
+      var idx = +t.dataset.i, field = t.dataset.f;
+      if (field === "firm") {
+        // Renaming a merging firm keeps it selected, unless another product still carries the old name
+        var oldFirm = rows[idx].firm.trim(), newFirm = t.value.trim();
+        rows[idx].firm = t.value;
+        var stillExists = rows.some(function (r, j) { return j !== idx && r.firm.trim() === oldFirm; }), mIdx = merging.indexOf(oldFirm);
+        if (mIdx >= 0 && !stillExists && newFirm && newFirm !== oldFirm) {
+          if (merging.indexOf(newFirm) < 0) merging[mIdx] = newFirm; else merging.splice(mIdx, 1);
+        }
+        drawFirms();
+      } else rows[idx][field] = t.value;
+    }
     else if (t.type === "checkbox") { merging = Array.prototype.filter.call($("ml-firms").querySelectorAll("input"), function (c) { return c.checked; }).map(function (c) { return c.value; }); }
     run();
   });
   root.addEventListener("click", function (e) {
     var t = e.target;
-    if (t.id === "ml-add") { rows.push({ product: "Product " + (rows.length + 1), firm: "Firm " + String.fromCharCode(65 + firms().length), price: 10, share: 5, margin: 25 }); drawInputs(); run(); }
+    if (t.id === "ml-add") { rows.push({ product: "Product " + (rows.length + 1), firm: nextFirmName(), price: 10, share: 5, margin: 25 }); drawInputs(); run(); }
     else if (t.id === "ml-reset") { $("ml-eff").value = 0; $("ml-pt").value = 0.5; reset(); }
     else if (t.dataset && t.dataset.del != null) { rows.splice(+t.dataset.del, 1); drawInputs(); run(); }
   });

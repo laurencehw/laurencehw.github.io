@@ -37,7 +37,8 @@
 </header>
 <main>
 <style>
-.sl { font-variant-numeric: tabular-nums; }
+.sl { font-variant-numeric: tabular-nums; --rerouted: #b58900; --built: #2d6a4f; --missing: #b4532a; }
+@media (prefers-color-scheme: dark) { .sl { --rerouted: #e0b44c; --built: #52b788; --missing: #e07a52; } }
 .sl .ctl { display: grid; grid-template-columns: minmax(9rem, 15rem) 1fr 3.6rem; gap: 0.25rem 0.8rem; align-items: center; font-family: var(--sans); font-size: 0.82rem; margin: 0 0 0.35rem; }
 .sl .ctl label { color: var(--ink); }
 .sl .ctl output { text-align: right; }
@@ -51,23 +52,24 @@
 .sl .row .lab { color: var(--muted); }
 .sl .row label { display: inline-flex; gap: 0.35rem; align-items: center; color: var(--muted); }
 .sl .figs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem 1rem; margin: 0.9rem 0; }
-.sl .figs > div { border-top: 1px solid var(--rule); padding-top: 0.45rem; }
+.sl .figs > div { border-top: 1px solid var(--rule); padding-top: 0.45rem; min-width: 0; }
 .sl .figs .k { font-family: var(--sans); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.03em; }
-.sl .figs .v { font-size: 1.4rem; line-height: 1.25; }
+.sl .figs .v { font-size: 1.4rem; line-height: 1.25; overflow-wrap: anywhere; }
 .sl .figs .s { font-family: var(--sans); font-size: 0.72rem; color: var(--muted); }
 .sl .stack { display: flex; height: 1.1rem; margin: 0.3rem 0 0.35rem; border-radius: 1px; overflow: hidden; }
 .sl .stack span { display: block; height: 100%; }
 .sl .key { font-family: var(--sans); font-size: 0.76rem; color: var(--muted); margin: 0 0 1rem; line-height: 1.7; }
-.sl .key i { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 1px; vertical-align: -1px; margin: 0 0.25rem 0 0.7rem; }
-.sl .key i:first-child { margin-left: 0; }
-.sl .c-others { background: var(--rule); } .sl .c-shipped { background: var(--muted); } .sl .c-rerouted { background: #d4a843; }
-.sl .c-built { background: #2d6a4f; } .sl .c-missing { background: #b4532a; }
+.sl .key .item { display: inline-flex; align-items: center; gap: 0.3rem; margin-right: 0.8rem; white-space: nowrap; }
+.sl .key i { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 1px; }
+.sl .c-others { background: var(--rule); } .sl .c-shipped { background: var(--muted); } .sl .c-rerouted { background: var(--rerouted); }
+.sl .c-built { background: var(--built); } .sl .c-missing { background: var(--missing); }
 .sl .verdict { border-left: 2px solid var(--rule); padding-left: 0.8rem; }
 .sl svg { display: block; width: 100%; height: auto; margin: 0.4rem 0 0.2rem; }
 .sl svg text { font-family: var(--sans); font-size: 11px; fill: var(--muted); }
 .sl svg .ax { stroke: var(--rule); stroke-width: 1; }
 .sl svg .p { fill: none; stroke: var(--link); stroke-width: 2; }
-.sl svg .th { stroke: #b4532a; stroke-width: 1.5; stroke-dasharray: 5 4; }
+.sl svg text.clip-note { fill: var(--missing); font-size: 10px; }
+.sl svg .th { stroke: var(--missing); stroke-width: 1.5; stroke-dasharray: 5 4; }
 .sl svg .win { fill: var(--link); opacity: 0.08; }
 .sl .grp { font-family: var(--sans); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.03em; margin: 0.9rem 0 0.3rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.2rem; }
 .sl .case { display: grid; grid-template-columns: 9.5rem 1fr 7.2rem; gap: 0.5rem; align-items: center; width: 100%; font-family: var(--sans); font-size: 0.8rem; margin: 0; padding: 0.22rem 0; border: 0; border-radius: 0; text-align: left; color: var(--ink); }
@@ -81,6 +83,8 @@
 .sl .scale { display: grid; grid-template-columns: 9.5rem 1fr 7.2rem; gap: 0.5rem; font-family: var(--sans); font-size: 0.7rem; color: var(--muted); }
 .sl .scale .t { position: relative; height: 1rem; }
 .sl .scale .t span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.sl .scale .t span.tk-first { transform: translateX(0); }
+.sl .scale .t span.tk-last { transform: translateX(-100%); }
 .sl .detail { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 0.7rem 0 0.2rem; margin: 1rem 0; }
 .sl .detail h3 { margin: 0 0 0.2rem; }
 .sl .detail dl { display: grid; grid-template-columns: 8.5rem 1fr; gap: 0.3rem 0.8rem; font-size: 0.88rem; margin: 0.6rem 0; }
@@ -95,6 +99,7 @@
   .sl .figs { grid-template-columns: repeat(2, 1fr); }
   .sl .ctl { grid-template-columns: 1fr 3.6rem; } .sl .ctl label { grid-column: 1 / -1; }
   .sl .case, .sl .scale { grid-template-columns: 6.4rem 1fr 5.6rem; }
+  .sl .scale .t span.hide-sm { display: none; }
   .sl .detail dl { grid-template-columns: 1fr; gap: 0 0; } .sl .detail dd { margin-bottom: 0.5rem; }
 }
 </style>
@@ -124,8 +129,8 @@
   <div><div class="k">Long run, new capacity</div><div class="v" id="sl-pc"></div><div class="s" id="sl-ql"></div></div>
 </div>
 <div class="stack" id="sl-stack" role="img" aria-label="Where 100 units of the target's supply go"></div>
-<p class="key"><i class="c-others"></i>other suppliers<i class="c-shipped"></i>still shipped by the coercer<i class="c-rerouted"></i>rerouted through third countries<i class="c-built"></i>new capacity<i class="c-missing"></i>missing</p>
-<p class="verdict" id="sl-v1"></p>
+<p class="key"><span class="item"><i class="c-others"></i>other suppliers</span><span class="item"><i class="c-shipped"></i>still shipped by the coercer</span><span class="item"><i class="c-rerouted"></i>rerouted through third countries</span><span class="item"><i class="c-built"></i>new capacity</span><span class="item"><i class="c-missing"></i>missing</span></p>
+<p class="verdict" id="sl-v1" aria-live="polite"></p>
 
 <h2>2. The race between clocks</h2>
 <p>The coercer wins if the target's government gives way before its economy adapts. Here the shortage from part 1 shrinks as the target replaces it, and the pressure on the government is the price rise on what is still missing, scaled by how much of that burden reaches anyone who decides. The government concedes only while pressure is above its threshold.</p>
@@ -134,28 +139,28 @@
 <div class="ctl"><label for="sl-w">Share of the burden that reaches those who decide</label><input type="range" id="sl-w" min="0" max="100" step="1"><output for="sl-w"></output></div>
 <div class="ctl"><label for="sl-c">Concession threshold, as a weighted price rise</label><input type="range" id="sl-c" min="1" max="100" step="1"><output for="sl-c"></output></div>
 <svg id="sl-chart" viewBox="0 0 640 250" role="img" aria-label="Pressure on the target's government over ten years, against its concession threshold"></svg>
-<p class="key"><i style="background:var(--link)"></i>politically weighted pressure<i style="background:#b4532a"></i>concession threshold<i style="background:var(--link);opacity:0.25"></i>window in which the measure can work</p>
-<p class="verdict" id="sl-v2"></p>
+<p class="key"><span class="item"><i style="background:var(--link)"></i>politically weighted pressure</span><span class="item"><i style="background:var(--missing)"></i>concession threshold</span><span class="item"><i style="background:var(--link);opacity:0.25"></i>window in which the measure can work</span></p>
+<p class="verdict" id="sl-v2" aria-live="polite"></p>
 <p class="small">This part is a drawing of the argument, not an estimate. The decay of the shortage and the weighting are my simplest choices of form, and the elasticity is held at its short-run value so that pressure falls only as supply is replaced. No one has measured a government's concession threshold.</p>
 
 <h2>3. Fifteen cases</h2>
 <p>The cases are the ones Economic Coercion works through, coded by me from its chapters. Each is placed by the months it took the target to replace most of what was denied. A filled dot means it had adapted by then. An open dot with an arrow means it had not adapted when the record stops, so the true figure is longer. Choose a case to read it.</p>
 <div class="row">
   <label>Clock <select id="sl-fclock"><option value="">all</option></select></label>
-  <label>Instrument <select id="sl-fdomain"><option value="">all</option></select></label>
+  <label>Instrument <select id="sl-fdomain"><option value="">all</option><option value="trade">trade</option><option value="finance">finance</option><option value="technology">technology</option></select></label>
   <label>Exposure <select id="sl-fband"><option value="">all</option></select></label>
   <label>Concession <select id="sl-fcon"><option value="">all</option></select></label>
   <span class="lab" id="sl-count"></span>
 </div>
 <div class="scale"><span></span><div class="t" id="sl-ticks"></div><span></span></div>
 <div id="sl-cases"></div>
-<div class="detail" id="sl-detail" hidden></div>
+<div class="detail" id="sl-detail" aria-live="polite" hidden></div>
 
 <h3>Did exposure or the clock sort the concessions?</h3>
 <p>The table counts the cases shown above, leaving out those where the coercer sought to deny a capability and not to win a concession.</p>
 <div class="row"><label>Rows <select id="sl-tabrow"><option value="clock">deciding clock</option><option value="band">exposure band</option></select></label></div>
 <div class="scroll"><table id="sl-tab"><thead></thead><tbody></tbody></table></div>
-<p class="verdict" id="sl-v3"></p>
+<p class="verdict" id="sl-v3" aria-live="polite"></p>
 
 <h2>What this leaves out</h2>
 <p>The exposure arithmetic is written for the denial of an input. A price cap, a reserve freeze and a ban on network access each work differently, and the book treats them in their own chapters. The pressure path has no network clock: it cannot show a sanction pushing the target's partners onto a rival payment system or standard that outlives the dispute. Leakage is held fixed, though in practice it grows with the price gap and shrinks with enforcement.</p>
@@ -214,6 +219,7 @@
       v1 += e.q > 0.2 && gap / e.ruleOfThumb > 0.25 ? "The rule of thumb gives " + pct(e.ruleOfThumb) + ", far too little for a withdrawal this large. " : "";
       v1 += "Given time the same shortage costs " + pct(e.longRunSameShortage) + (val("rep") > 0 ? ", and " + pct(e.longRunWithCapacity) + " once new capacity replaces part of it." : ".") + " The gap between the first figure and the last is the leverage the coercer loses if the target's government outlasts its economy's adjustment.";
     }
+    if (val("es") > val("el")) v1 += " Note: the short-run elasticity you set (" + val("es").toFixed(2) + ") is above the long-run one (" + val("el").toFixed(2) + "), so the long-run price rise exceeds the short-run one.";
     $("sl-v1").textContent = v1;
     renderClocks(e.q);
   }
@@ -234,6 +240,9 @@
     [0, 0.5, 1].forEach(function (k) { s += '<text x="' + (l - 6) + '" y="' + (Y(ymax * k) + 4) + '" text-anchor="end">' + Math.round(100 * ymax * k) + '%</text>'; });
     s += '<line class="th" x1="' + l + '" y1="' + Y(o.threshold) + '" x2="' + (W - r) + '" y2="' + Y(o.threshold) + '"/>';
     s += '<polyline class="p" points="' + pts.map(function (p) { return X(p.t).toFixed(1) + ',' + Y(isFinite(p.pressure) ? p.pressure : ymax).toFixed(1); }).join(' ') + '"/>';
+    // Where the path runs off the top, say so, so the cut-off is not read as a plateau
+    if (pts.some(function (p) { return !isFinite(p.pressure) || p.pressure > ymax; }))
+      s += '<text class="clip-note" x="' + (l + 6) + '" y="' + (t + 11) + '">↑ above the axis (' + Math.round(100 * ymax) + '%)</text>';
     $("sl-chart").innerHTML = s;
     var v;
     if (q < 0.0005) v = "With nothing withdrawn there is no pressure to speak of.";
@@ -245,6 +254,7 @@
       v = "Pressure is above the threshold for about " + (m < 24 ? m + " month" + (m === 1 ? "" : "s") : (win / 12).toFixed(1) + " years") + ". After that the measure still costs both sides but can no longer compel. A coercer who needs longer than that has to slow the target's adaptation or reach the people who decide.";
     }
     $("sl-v2").textContent = v;
+    $("sl-chart").setAttribute("aria-label", "Pressure on the target's government over ten years against its " + Math.round(100 * o.threshold) + "% concession threshold. " + v);
   }
 
   // ---- cases ----
@@ -267,7 +277,8 @@
   }
   function shown() {
     var f = { clock: $("sl-fclock").value, domain: $("sl-fdomain").value, band: $("sl-fband").value, concession: $("sl-fcon").value };
-    return CASES.filter(function (c) { return Object.keys(f).every(function (k) { return !f[k] || c[k] === f[k]; }); });
+    // Instruments match by word, so a "finance and trade" case shows under both finance and trade
+    return CASES.filter(function (c) { return Object.keys(f).every(function (k) { return !f[k] || (k === "domain" ? String(c.domain || "").split(" and ").indexOf(f[k]) >= 0 : c[k] === f[k]); }); });
   }
   function monthsText(c) {
     if (c.months == null) return c.basis === "not_needed" ? "no adaptation needed" : "no date given";
@@ -276,7 +287,7 @@
   }
   function renderCases() {
     var list = shown(), html = "";
-    $("sl-count").textContent = list.length + " of " + CASES.length + " cases";
+    $("sl-count").textContent = list.length + " of " + CASES.length + (list.length === 1 ? " case" : " cases");
     ORDER.clock.forEach(function (k) {
       var g = list.filter(function (c) { return c.clock === k; }).sort(function (a, b) { return (a.months == null ? 1e9 : a.months) - (b.months == null ? 1e9 : b.months); });
       if (!g.length) return;
@@ -287,7 +298,7 @@
           var p = pos(c.months), open = c.basis === "lower_bound";
           mark = (open ? '<span class="arrow" style="left:' + p + '%"></span>' : "") + '<span class="dot' + (open ? " open" : "") + '" style="left:' + p + '%"></span>';
         }
-        html += '<button type="button" class="case" data-id="' + c.id + '" aria-pressed="' + (selected === c.id) + '"><span class="nm">' + esc(c.label) + '</span><span class="track">' + mark + '</span><span class="mo">' + monthsText(c) + '</span></button>';
+        html += '<button type="button" class="case" data-id="' + c.id + '" aria-pressed="' + (selected === c.id) + '" aria-expanded="' + (selected === c.id) + '"><span class="nm">' + esc(c.label) + '</span><span class="track">' + mark + '</span><span class="mo">' + monthsText(c) + '</span></button>';
       });
     });
     $("sl-cases").innerHTML = html || '<p class="small">No case matches these filters.</p>';
@@ -331,9 +342,9 @@
     var onPol = won.filter(function (c) { return c.clock === "political"; }).length;
     var fast = L.adaptedWithin(list, 24);
     $("sl-v3").textContent = !sought.length ? "None of the cases shown sought a concession." :
-      "Of the " + sought.length + " cases shown where a concession was sought, " + won.length + " ended in a full or partial one" +
+      "Of the " + sought.length + (sought.length === 1 ? " case" : " cases") + " shown where a concession was sought, " + won.length + " ended in a full or partial one" +
       (won.length ? ", " + (onPol === won.length ? "all" : onPol) + " of them decided on the political clock" : "") + ". " +
-      fast.length + " of the " + list.length + " cases shown had adapted within two years" + (fast.length ? ": " + fast.map(function (c) { return c.label; }).join("; ") : "") + ".";
+      fast.length + " of the " + list.length + (list.length === 1 ? " case" : " cases") + " shown had adapted within two years" + (fast.length ? ": " + fast.map(function (c) { return c.label; }).join("; ") : "") + ".";
   }
 
   // ---- wiring ----
@@ -341,7 +352,7 @@
   Array.prototype.forEach.call(document.querySelectorAll(".sl [data-preset]"), function (b) {
     b.addEventListener("click", function () { set(PRESETS[b.getAttribute("data-preset")]); renderModel(); });
   });
-  fillSelect("sl-fclock", "clock", NAMES.clock); fillSelect("sl-fdomain", "domain"); fillSelect("sl-fband", "band", NAMES.band); fillSelect("sl-fcon", "concession", NAMES.concession);
+  fillSelect("sl-fclock", "clock", NAMES.clock); fillSelect("sl-fband", "band", NAMES.band); fillSelect("sl-fcon", "concession", NAMES.concession);
   ["sl-fclock", "sl-fdomain", "sl-fband", "sl-fcon"].forEach(function (id) { $(id).addEventListener("change", renderCases); });
   $("sl-tabrow").addEventListener("change", function () { renderTab(shown()); });
   $("sl-cases").addEventListener("click", function (ev) {
@@ -349,7 +360,8 @@
     selected = selected === b.getAttribute("data-id") ? null : b.getAttribute("data-id");
     renderCases(); renderDetail();
   });
-  $("sl-ticks").innerHTML = [[6, "6 mo"], [12, "1 yr"], [24, "2"], [60, "5"], [120, "10"], [300, "25"], [600, "50 yr"]].map(function (t) { return '<span style="left:' + pos(t[0]) + '%">' + t[1] + '</span>'; }).join("");
+  $("sl-ticks").innerHTML = [[6, "6 mo", "tk-first hide-sm"], [12, "1 yr", ""], [24, "2", ""], [60, "5", ""], [120, "10", ""], [300, "25", "hide-sm"], [600, "50 yr", "tk-last"]]
+    .map(function (t) { return '<span class="' + t[2] + '" style="left:' + pos(t[0]) + '%">' + t[1] + '</span>'; }).join("");
   set(PRESETS.worked); set(DEFAULT2);
   renderModel(); renderCases();
 })();

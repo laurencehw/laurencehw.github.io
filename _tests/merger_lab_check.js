@@ -36,4 +36,27 @@ near(h.pre, 3750); near(h.post, 6250); near(h.delta, 2500); assert(h.presumedHHI
 const u = M.upp(P, ["Firm A", "Firm B"], 0, 0.5);
 near(u[0].guppi, (0.20 / 0.75) * (11 * 0.23) / 10); near(u[2].guppi, ((0.25 / 0.8) * 3.3 + (0.15 / 0.8) * 3.36) / 11);
 assert(u[3] === null);
+// Efficiency credit: UPP_j = sum_k D_jk (p_k - (1 - e) c_k) - e c_j, by hand for Product 3
+const ue = M.upp(P, ["Firm A", "Firm B"], 0.1, 0.5);
+near(ue[2].upp, (0.25 / 0.8) * (10 - 0.9 * 6.7) + (0.15 / 0.8) * (12 - 0.9 * 8.64) - 0.1 * 8.47);
+// Small outside option (s0 = 1%) solves cleanly without exp() underflow
+const smallS0 = M.simulate([
+  { product: "P1", firm: "A", price: 10, share: 0.495, margin: 0.5 },
+  { product: "P2", firm: "B", price: 10, share: 0.495, margin: 0.5 }
+], ["A", "B"]);
+assert(smallS0.converged && smallS0.pricesPost.every(p => isFinite(p) && p > 10));
+// Asymmetric market converges and flags the negative implied marginal cost
+const asym = M.simulate([
+  { product: "Budget", firm: "A", price: 1, share: 0.49, margin: 0.95 },
+  { product: "Luxury", firm: "B", price: 1000, share: 0.49, margin: 0.05 }
+], ["A", "B"]);
+assert(asym.converged && asym.negativeMc.indexOf(0) >= 0);
+// A non-merging rival named "A+B" is never absorbed into the merged firm
+const col = M.simulate([
+  { product: "P1", firm: "A", price: 10, share: 0.25, margin: 0.33 },
+  { product: "P2", firm: "B", price: 11, share: 0.20, margin: 0.23 },
+  { product: "P3", firm: "A+B", price: 10.5, share: 0.20, margin: 0.24 }
+], ["A", "B"], { efficiency: 0.1 });
+assert(col.converged && col.isMerged[2] === false && col.ownershipPost[2] === "A+B" && col.ownershipPost[0] !== "A+B");
+near(col.mcPost[2], col.mcImplied[2], 1e-12);
 console.log("merger-lab: all checks pass");
