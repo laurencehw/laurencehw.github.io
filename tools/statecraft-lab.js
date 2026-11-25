@@ -37,6 +37,7 @@
   // Share of baseline supply still missing t months in: the replaceable part of the
   // shortage halves every halfLife months; a fraction `floor` of it is never replaced.
   function missingAt(t, q, halfLife, floor) {
+    if (t <= 0) return q;
     var decay = halfLife > 0 ? Math.pow(0.5, t / halfLife) : 0;
     return q * (floor + (1 - floor) * decay);
   }
@@ -44,6 +45,7 @@
   // Politically weighted pressure: the price rise on the missing supply times the
   // share of that burden reaching people who decide.
   function pressureAt(t, o) {
+    if (!(o.weight > 0)) return 0; // avoids 0 * Infinity when the whole supply is withdrawn
     return o.weight * priceRise(missingAt(t, o.q, o.halfLife, o.floor), o.eta);
   }
 

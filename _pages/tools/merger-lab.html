@@ -158,13 +158,13 @@
     var name = merging.join("+"), max = Math.max.apply(null, sim.pctChange.map(Math.abs).concat([0.01])), anyNeg = sim.pctChange.some(function (c) { return c < 0; });
     $("ml-bars").innerHTML = P.map(function (p, j) {
       var c = sim.pctChange[j], w = 100 * Math.abs(c) / max * (anyNeg ? 0.5 : 1), left = anyNeg ? (c < 0 ? 50 - w : 50) : 0;
-      return '<div class="bar"><span>' + esc(p.product) + '</span><span class="track">' + (anyNeg ? '<span class="axis" style="left:50%"></span>' : "") + '<span class="fill' + (c < 0 ? " neg" : sim.ownershipPost[j] === name ? "" : " rival") + '" style="left:' + left + "%;width:" + w + '%"></span></span><span class="pc">' + signed(c) + "</span></div>";
+      return '<div class="bar"><span>' + esc(p.product) + '</span><span class="track">' + (anyNeg ? '<span class="axis" style="left:50%"></span>' : "") + '<span class="fill' + (c < 0 ? " neg" : sim.isMerged[j] ? "" : " rival") + '" style="left:' + left + "%;width:" + w + '%"></span></span><span class="pc">' + signed(c) + "</span></div>";
     }).join("");
     $("ml-sim").tBodies[0].innerHTML = P.map(function (p, j) {
       return "<tr><td>" + esc(p.product) + "</td><td>" + esc(sim.ownershipPost[j]) + '</td><td class="n">' + sim.pricesPre[j].toFixed(2) + '</td><td class="n">' + sim.pricesPost[j].toFixed(2) + '</td><td class="n">' + signed(sim.pctChange[j]) + '</td><td class="n">' + pct(sim.sharesPre[j]) + '</td><td class="n">' + pct(sim.sharesPost[j]) + "</td></tr>";
     }).join("");
     var wm = 0, sm = 0, fo = 0, so = 0, k = 0;
-    P.forEach(function (p, j) { if (sim.ownershipPost[j] === name) { wm += sim.sharesPre[j] * sim.pctChange[j]; sm += sim.sharesPre[j]; if (u[j]) { fo += sim.sharesPre[j] * u[j].firstOrderPct; } } else { so += sim.pctChange[j]; k++; } });
+    P.forEach(function (p, j) { if (sim.isMerged[j]) { wm += sim.sharesPre[j] * sim.pctChange[j]; sm += sim.sharesPre[j]; if (u[j]) { fo += sim.sharesPre[j] * u[j].firstOrderPct; } } else { so += sim.pctChange[j]; k++; } });
     var avg = wm / sm, sv = $("ml-sim-verdict");
     sv.className = "verdict" + (avg > 0.05 ? " flag" : "");
     sv.textContent = "The merging products' prices " + (avg >= 0 ? "rise" : "fall") + " by " + pct(Math.abs(avg)) + " on average, weighted by share, against " + pct(Math.abs(fo / sm)) + " from the first-order screen." + (k ? " Rivals' prices " + (so / k >= 0 ? "rise" : "fall") + " by " + pct(Math.abs(so / k)) + " on average." : "") + " The outside option grows from " + pct(sim.outsidePre) + " to " + pct(sim.outsidePost) + " of the market.";

@@ -50,18 +50,23 @@
   }
 
   /* Upward pricing pressure for each merging product: diversion to the other merging
-     firm's products, valued at their dollar margins, less an efficiency credit. */
+     firm's products, valued at their dollar margins, less an efficiency credit. The
+     efficiency lowers the cost of every merging product, as in simulate(), so the
+     diverted sales are valued at the partner's post-efficiency margin:
+     UPP_j = sum_k D_jk (p_k - (1 - e) c_k) - e c_j. With e = 0 this is GUPPI in dollars. */
   function upp(products, mergingFirms, efficiency, passThrough) {
     var D = diversion(products), eff = efficiency || 0, pt = passThrough == null ? 0.5 : passThrough;
     return products.map(function (p, j) {
       if (mergingFirms.indexOf(p.firm) < 0) return null;
-      var g = 0, d = 0;
+      var g = 0, d = 0, partnerCost = 0;
       products.forEach(function (q, k) {
         if (k !== j && q.firm !== p.firm && mergingFirms.indexOf(q.firm) >= 0) {
-          g += D[j][k] * (q.price * q.margin); d += D[j][k];
+          g += D[j][k] * (q.price * q.margin);
+          partnerCost += D[j][k] * q.price * (1 - q.margin);
+          d += D[j][k];
         }
       });
-      var credit = eff * p.price * (1 - p.margin);
+      var credit = eff * (p.price * (1 - p.margin) - partnerCost);
       return { product: p.product, diversionToPartner: d, guppiDollar: g, guppi: g / p.price,
         upp: g - credit, uppIndex: (g - credit) / p.price, firstOrderPct: pt * (g - credit) / p.price };
     });
@@ -93,10 +98,19 @@
     var alphaJ = p0.map(function (p, j) { return 1 / ((p - c[j]) * (1 - firmShare[j])); }),
         alpha = alphaJ.reduce(function (a, b) { return a + b; }, 0) / n,
         delta = s.map(function (v, j) { return Math.log(v / s0) + alpha * p0[j]; });
-    function shares(p) {
-      var e = p.map(function (v, j) { return Math.exp(delta[j] - alpha * v); }),
-          tot = 1 + e.reduce(function (a, b) { return a + b; }, 0);
+    // Log-sum-exp stabilized shares and inclusive value, so a small outside share never underflows
+    function shares(pr) {
+      var u = pr.map(function (v, j) { return delta[j] - alpha * v; }),
+          mx = Math.max.apply(null, u.concat([0])),
+          e = u.map(function (x) { return Math.exp(x - mx); }),
+          tot = Math.exp(-mx) + e.reduce(function (a, b) { return a + b; }, 0);
       return e.map(function (v) { return v / tot; });
+    }
+    function logsum(pr) {
+      var u = pr.map(function (v, j) { return delta[j] - alpha * v; }),
+          mx = Math.max.apply(null, u.concat([0])),
+          tot = Math.exp(-mx) + u.reduce(function (a, x) { return a + Math.exp(x - mx); }, 0);
+      return mx + Math.log(tot);
     }
     function markup(firm, sh) {
       var A = sh.map(function (sj, j) {
@@ -107,24 +121,60 @@
       });
       return solve(A, sh.map(function (v) { return -v; }));
     }
+    // With logit demand and one price coefficient, the first-order conditions give every
+    // product of firm f the same markup, 1 / (alpha * (1 - S_f)), where S_f is the firm's share.
+    function markupClosed(firm, sh) {
+      var fs = {};
+      sh.forEach(function (sj, j) { fs[firm[j]] = (fs[firm[j]] || 0) + sj; });
+      return sh.map(function (_, j) {
+        var denom = alpha * (1 - fs[firm[j]]);
+        if (!(denom > 1e-14)) throw new Error("The pricing equations cannot be solved for these inputs.");
+        return 1 / denom;
+      });
+    }
     // Costs consistent with the first-order conditions at observed pre-merger prices
     var m0 = markup(firmPre, s), mc = p0.map(function (p, j) { return p - m0[j]; });
-    var name = mergingFirms.join("+"),
-        firmPost = firmPre.map(function (f) { return mergingFirms.indexOf(f) >= 0 ? name : f; }),
-        mcPost = mc.map(function (v, j) { return firmPost[j] === name ? v * (1 - eff) : v; });
-    var p = p0.slice(), converged = false, iter = 0;
-    for (; iter < maxIter; iter++) {
-      var m = markup(firmPost, shares(p)), pn = mcPost.map(function (v, j) { return v + m[j]; }),
-          gap = Math.max.apply(null, pn.map(function (v, j) { return Math.abs(v - p[j]); }));
-      if (gap < tol) { p = pn; converged = true; break; }
-      p = p.map(function (v, j) { return v + damping * (pn[j] - v); });
+    var isMerged = firmPre.map(function (f) { return mergingFirms.indexOf(f) >= 0; });
+    var uniqMerging = mergingFirms.filter(function (f, i, a) { return a.indexOf(f) === i; });
+    var name = uniqMerging.join("+");
+    // A rival that happens to carry the merged firm's name must not be absorbed into it
+    while (firmPre.some(function (f, j) { return !isMerged[j] && f === name; })) name = "Merged (" + name + ")";
+    var firmPost = firmPre.map(function (f, j) { return isMerged[j] ? name : f; }),
+        mcPost = mc.map(function (v, j) { return isMerged[j] ? v * (1 - eff) : v; });
+
+    // Damped fixed-point iteration; a step that would push the outside share to zero is halved
+    function iterate(step0, limit) {
+      var pr = p0.slice(), conv = false, it = 0;
+      for (; it < limit; it++) {
+        var sh = shares(pr), m;
+        try { m = markupClosed(firmPost, sh); } catch (_) { return { p: pr, converged: false, iter: it }; }
+        var pn = mcPost.map(function (v, j) { return v + m[j]; }),
+            gap = Math.max.apply(null, pn.map(function (v, j) { return Math.abs(v - pr[j]); }));
+        if (!isFinite(gap)) return { p: pr, converged: false, iter: it };
+        if (gap < tol) { pr = pn; conv = true; break; }
+        var cur = step0, accepted = false;
+        for (var h = 0; h < 12; h++) {
+          var cand = pr.map(function (v, j) { return v + cur * (pn[j] - v); }), shC = shares(cand);
+          if (shC.every(isFinite) && (1 - shC.reduce(function (a, b) { return a + b; }, 0)) > 1e-14) {
+            pr = cand; accepted = true; break;
+          }
+          cur *= 0.5;
+        }
+        if (!accepted) return { p: pr, converged: false, iter: it };
+      }
+      return { p: pr, converged: conv, iter: it };
     }
+    var res = iterate(damping, maxIter);
+    if (!res.converged && damping > 0.15) res = iterate(0.1, maxIter);
+    var p = res.p, converged = res.converged, iter = res.iter;
     var sPost = shares(p);
+    var negativeMc = [];
+    mc.forEach(function (v, j) { if (v < 0) negativeMc.push(j); });
     // Consumer surplus change per unit of market size (logit inclusive value, in price units)
-    function logsum(pr) { return Math.log(1 + pr.reduce(function (a, v, j) { return a + Math.exp(delta[j] - alpha * v); }, 0)); }
     return { alpha: alpha, alphaImplied: alphaJ, pricesPre: p0, pricesPost: p,
       pctChange: p.map(function (v, j) { return v / p0[j] - 1; }), sharesPre: s, sharesPost: sPost,
-      mcImplied: mc, mcPost: mcPost, ownershipPost: firmPost, outsidePre: s0,
+      mcImplied: mc, mcPost: mcPost, negativeMc: negativeMc, isMerged: isMerged,
+      ownershipPost: firmPost, outsidePre: s0,
       outsidePost: 1 - sPost.reduce(function (a, b) { return a + b; }, 0),
       ownElasticity: p0.map(function (v, j) { return -alpha * v * (1 - s[j]); }),
       consumerSurplusChange: (logsum(p) - logsum(p0)) / alpha, converged: converged, iterations: iter };

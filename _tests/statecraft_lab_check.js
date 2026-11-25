@@ -49,5 +49,9 @@ eq('8(b): six adapted-by values', C.filter(L.adapted).length, 6);
 eq('8(b): adapted within 24 months', L.adaptedWithin(C, 24).map(function (c) { return c.id; }), ['C03', 'C12', 'C13', 'C14']);
 eq('8(b): all four on the adaptation clock', L.adaptedWithin(C, 24).every(function (c) { return c.clock === 'adaptation'; }), true);
 
+// Edge cases: q = 1 with weight 0 gives 0, not NaN; at t = 0 with halfLife 0 the whole shortage is missing
+eq('q=1 and weight=0 yields 0, not NaN', L.pressureAt(0, { q: 1, eta: 0.3, halfLife: 12, floor: 0, weight: 0, threshold: 0.1 }), 0);
+near('missingAt at t=0 with halfLife=0 equals q', L.missingAt(0, 0.3, 0, 0.2), 0.3, 1e-12);
+
 console.log(fails ? fails + ' check(s) failed' : 'all checks passed');
 process.exit(fails ? 1 : 0);
